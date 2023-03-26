@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => FugaProvider()),
+        ChangeNotifierProvider(create: (context) => ReparadoProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

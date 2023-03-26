@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:install_inspect/src/providers/providers.dart';
+import 'package:install_inspect/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class FormularioInspeccionScreen extends StatefulWidget {
@@ -15,20 +16,30 @@ class _FormularioInspeccionScreenState
   final _formKey = GlobalKey<FormState>();
 
   final equipoComponente = TextEditingController();
-
   final fechaInicioInspeccion = TextEditingController();
-
   final horaInicioInspeccion = TextEditingController();
-
   final fechafinalizacionInspeccion = TextEditingController();
-
   final horafinalizacionInspeccion = TextEditingController();
-
   final temperatura = TextEditingController();
-
   final corrienteAireKMH = TextEditingController();
-
   final fuga = TextEditingController();
+
+  // FUGA = SI
+  final concentracion = TextEditingController();
+  final reparado = TextEditingController();
+  //final fechaReparacion = TextEditingController();
+
+  // REPARADO SI
+  final fechaReparacion = TextEditingController();
+  final horaReparacion = TextEditingController();
+  final concentracionFuga = TextEditingController();
+
+  // Reparado NO
+
+  final faltaComponentes = TextEditingController();
+  final fechaCompraNuevoComponente = TextEditingController();
+  final fechaReparacionNuevoComponente = TextEditingController();
+  final concentracionMetano = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +68,7 @@ class _FormularioInspeccionScreenState
               const SizedBox(
                 height: 15,
               ),
-              CampoDateTime(
+              CampoFecha(
                 controlador: fechaInicioInspeccion,
                 hinText: 'Fecha de Inicio de la Inspección',
               ),
@@ -71,7 +82,7 @@ class _FormularioInspeccionScreenState
               const SizedBox(
                 height: 15,
               ),
-              CampoDateTime(
+              CampoFecha(
                 controlador: fechafinalizacionInspeccion,
                 hinText: 'Fecha de finalización de la Inspección',
               ),
@@ -102,29 +113,53 @@ class _FormularioInspeccionScreenState
               ),
               CampoCheckBoxAlert(
                 fuga: fuga,
-                hinText: '¿Pudo ser reparado?',
+                hinText: '¿Hay Fuga?',
+                concentracion: concentracion,
+                reparado: reparado,
               ),
-              // CampoCheckBox(
-              //   fuga: fuga,
-              //   hinText: "¿Pudo ser Reparado?",
-              // ),
               const SizedBox(
                 height: 15,
               ),
 
               hayfugas.getFuga == 'Si'
-                  ? DatosInspeccion(
-                      controlador: equipoComponente,
-                      hinText: 'prueba de formulario',
+                  ? FugaSI(
+                      concentracion: concentracion,
+                      reparado: reparado,
+                      //fechaReparacion: fechaReparacion,
+                      fechaReparacion: fechaReparacion,
+                      horaReparacion: horaReparacion,
+                      concentracionFuga: concentracionFuga,
+                      faltaComponentes: faltaComponentes,
+                      fechaCompraNuevoComponente: fechaCompraNuevoComponente,
+                      fechaReparacionNuevoComponente:
+                          fechaReparacionNuevoComponente,
+                      concentracionMetano: concentracionMetano,
                     )
-                  : Text('No se desplegara nada'),
+                  : const Text('No desplegara nada'),
               const SizedBox(
                 height: 50,
               ),
               ElevatedButton(
-                onPressed: () =>
-                    {} //salidaEstandar(nombre, inspector, instrumento, lugar),
-                ,
+                onPressed: () => {
+                  salidaDatos(
+                      equipoComponente,
+                      fechaInicioInspeccion,
+                      horaInicioInspeccion,
+                      fechafinalizacionInspeccion,
+                      horafinalizacionInspeccion,
+                      temperatura,
+                      corrienteAireKMH,
+                      fuga,
+                      concentracion,
+                      reparado,
+                      fechaReparacion,
+                      horaReparacion,
+                      concentracionFuga,
+                      faltaComponentes,
+                      fechaCompraNuevoComponente,
+                      fechaReparacionNuevoComponente,
+                      concentracionMetano)
+                },
                 child: const Text('Guardar'),
               ),
               const SizedBox(
@@ -183,145 +218,17 @@ class DatosInspeccion extends StatelessWidget {
   }
 }
 
-class CampoDateTime extends StatefulWidget {
-  final TextEditingController controlador;
-  final String hinText;
-  const CampoDateTime(
-      {super.key, required this.controlador, required this.hinText});
-
-  @override
-  State<CampoDateTime> createState() => _CampoDateTimeState();
-}
-
-class _CampoDateTimeState extends State<CampoDateTime> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Container(
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(
-              offset: Offset(4, -4),
-              blurRadius: 6,
-              color: Colors.black26,
-            ),
-          ],
-        ),
-        height: 60,
-        child: TextFormField(
-          controller: widget.controlador,
-          style: const TextStyle(
-            color: Colors.black87,
-          ),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.only(top: 14),
-            prefixIcon: const Icon(
-              Icons.email,
-              color: Colors.white,
-            ),
-            hintText: widget.hinText,
-            hintStyle: const TextStyle(color: Colors.black38),
-          ),
-          onTap: () => {
-            FocusScope.of(context).requestFocus(FocusNode()),
-            selectDate(context),
-          },
-        ),
-      ),
-    );
-  }
-
-  selectDate(BuildContext context) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2023),
-      lastDate: DateTime(2030),
-    );
-
-    String fecha;
-    if (picked != null) {
-      setState(() {
-        fecha = picked.toString();
-        widget.controlador.text = fecha.substring(0, 10);
-      });
-    }
-  }
-}
-
-class CampoTimePicker extends StatefulWidget {
-  final TextEditingController controlador;
-  final String hinText;
-
-  const CampoTimePicker(
-      {super.key, required this.controlador, required this.hinText});
-  @override
-  State<CampoTimePicker> createState() => _CampoTimePickerState();
-}
-
-class _CampoTimePickerState extends State<CampoTimePicker> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Container(
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(
-              offset: Offset(4, -4),
-              blurRadius: 6,
-              color: Colors.black26,
-            ),
-          ],
-        ),
-        height: 60,
-        child: TextFormField(
-          controller: widget.controlador,
-          style: const TextStyle(
-            color: Colors.black87,
-          ),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.only(top: 14),
-            prefixIcon: const Icon(
-              Icons.email,
-              color: Colors.white,
-            ),
-            hintText: widget.hinText,
-            hintStyle: const TextStyle(color: Colors.black38),
-          ),
-          onTap: () => {
-            FocusScope.of(context).requestFocus(FocusNode()),
-            selectTime(context),
-          },
-        ),
-      ),
-    );
-  }
-
-  selectTime(BuildContext context) {
-    String hora;
-    return showTimePicker(context: context, initialTime: TimeOfDay.now())
-        .then((value) => setState(() {
-              hora = value.toString();
-              widget.controlador.text = hora.substring(10, 15);
-            }));
-  }
-}
-
 class CampoCheckBoxAlert extends StatelessWidget {
   const CampoCheckBoxAlert(
-      {super.key, required this.fuga, required this.hinText});
+      {super.key,
+      required this.fuga,
+      required this.hinText,
+      required this.concentracion,
+      required this.reparado});
 
   final TextEditingController fuga;
+  final TextEditingController concentracion;
+  final TextEditingController reparado;
   final String hinText;
 
   @override
@@ -373,13 +280,15 @@ class CampoCheckBoxAlert extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("¿Pudo ser reparado?"),
+          title: const Text("¿Hay Fuga?"),
           actions: [
             TextButton(
               child: const Text("No"),
               onPressed: () {
                 fuga.text = 'No';
                 hayfugas.setFuga = fuga.text;
+                concentracion.text = '';
+                reparado.text = '';
                 Navigator.of(context).pop();
               },
             ),
@@ -388,6 +297,8 @@ class CampoCheckBoxAlert extends StatelessWidget {
               onPressed: () {
                 fuga.text = 'Si';
                 hayfugas.setFuga = fuga.text;
+                concentracion.text = '';
+                reparado.text = '';
                 Navigator.of(context).pop();
               },
             ),
@@ -398,36 +309,40 @@ class CampoCheckBoxAlert extends StatelessWidget {
   }
 }
 
-class CampoCheckBox extends StatefulWidget {
-  const CampoCheckBox({super.key, required this.fuga, required this.hinText});
-
-  final TextEditingController fuga;
-  final String hinText;
-
-  @override
-  State<CampoCheckBox> createState() => _CkeState();
-}
-
-class _CkeState extends State<CampoCheckBox> {
-  @override
-  Widget build(BuildContext context) {
-    return SwitchListTile.adaptive(
-        title: const Text('Habilitar Slider'),
-        value: true,
-        onChanged: (value) {
-          //_sliderEnabled = value;
-          setState(() {});
-        });
-
-    CheckboxListTile(
-      title: Text(widget.hinText),
-      value: true,
-      onChanged: (newValue) {
-        setState(() {
-          widget.fuga.text = newValue.toString();
-        });
-      },
-      controlAffinity: ListTileControlAffinity.leading, //  <-- leading Checkbox
-    );
-  }
+salidaDatos(
+    TextEditingController equipoComponente,
+    TextEditingController fechaInicioInspeccion,
+    TextEditingController horaInicioInspeccion,
+    TextEditingController fechafinalizacionInspeccion,
+    TextEditingController horafinalizacionInspeccion,
+    TextEditingController temperatura,
+    TextEditingController corrienteAireKMH,
+    TextEditingController fuga,
+    TextEditingController concentracion,
+    TextEditingController reparado,
+    TextEditingController fechaReparacion,
+    TextEditingController horaReparacion,
+    TextEditingController concentracionFuga,
+    TextEditingController faltaComponentes,
+    TextEditingController fechaCompraNuevoComponente,
+    TextEditingController fechaReparacionNuevoComponente,
+    TextEditingController concentracionMetano) {
+  print('SALIDA DE LOS DATOS DE INSPECCION');
+  print('1 ${equipoComponente.text}');
+  print('2 ${fechaInicioInspeccion.text}');
+  print('3 ${horaInicioInspeccion.text}');
+  print('4 ${fechafinalizacionInspeccion.text}');
+  print('5 ${horafinalizacionInspeccion.text}');
+  print('6 ${temperatura.text}');
+  print('7 ${corrienteAireKMH.text}');
+  print('8 ${fuga.text}');
+  print('9 ${concentracion.text}');
+  print('10 ${reparado.text}');
+  print('11 ${fechaReparacion.text}');
+  print('12 ${horaReparacion.text}');
+  print('13 ${concentracionFuga.text}');
+  print('14 ${faltaComponentes.text}');
+  print('15 ${fechaCompraNuevoComponente.text}');
+  print('16 ${fechaReparacionNuevoComponente.text}');
+  print('17 ${concentracionMetano.text}');
 }
