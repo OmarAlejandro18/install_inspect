@@ -14,7 +14,7 @@ class QueryInstalaciones with ChangeNotifier {
       maps.length,
       (i) {
         return Instalacion(
-          instalacionID: maps[i]['instalacionID'],
+          //instalacionID: maps[i]['instalacionID'],
           nombre: maps[i]['nombre'],
           inspector: maps[i]['inspector'],
           instrumento: maps[i]['instrumento'],

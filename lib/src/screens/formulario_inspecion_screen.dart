@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:install_inspect/src/db/insertar_inspeccion.dart';
+import 'package:install_inspect/src/models/inspeccion_model.dart';
 import 'package:install_inspect/src/providers/providers.dart';
+import 'package:install_inspect/src/widgets/image_picker.dart';
 import 'package:install_inspect/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -41,11 +44,21 @@ class _FormularioInspeccionScreenState
   final fechaReparacionNuevoComponente = TextEditingController();
   final concentracionMetano = TextEditingController();
 
+  final foto = TextEditingController();
+  final fotoTermodinamica = TextEditingController();
+
+  int inspeccionID = 0;
   @override
   Widget build(BuildContext context) {
     final hayfugas = Provider.of<FugaProvider>(context);
+    final fueReperado = Provider.of<ReparadoProvider>(context, listen: false);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text('Inspección'),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -116,6 +129,9 @@ class _FormularioInspeccionScreenState
                 hinText: '¿Hay Fuga?',
                 concentracion: concentracion,
                 reparado: reparado,
+                fechaReparacion: fechaReparacion,
+                horaReparacion: horaReparacion,
+                concentracionFuga: concentracionFuga,
               ),
               const SizedBox(
                 height: 15,
@@ -135,30 +151,114 @@ class _FormularioInspeccionScreenState
                           fechaReparacionNuevoComponente,
                       concentracionMetano: concentracionMetano,
                     )
-                  : const Text('No desplegara nada'),
+                  : Container(),
               const SizedBox(
                 height: 50,
               ),
+
+              ElevatedButton(
+                  onPressed: () {
+                    foto.text = cargarFoto();
+                  },
+                  child: const Text('Cargar fotografia')),
+              ElevatedButton(
+                  onPressed: () {
+                    fotoTermodinamica.text = cargarFotoTermografica();
+                  },
+                  child: const Text('Cargar fotografia Termodinamica')),
               ElevatedButton(
                 onPressed: () => {
+                  InsertarInspeccion().agregarInspeccion(Inspeccion(
+                      //inspeccionID += 1,
+                      fuga.text,
+                      concentracion.text != '' ? concentracion.text : 'null',
+                      reparado.text != '' ? reparado.text : 'null',
+                      fechaReparacion.text != ''
+                          ? fechaReparacion.text
+                          : 'null',
+                      horaReparacion.text != '' ? horaReparacion.text : 'null',
+                      concentracionFuga.text != ''
+                          ? concentracionFuga.text
+                          : 'null',
+                      faltaComponentes.text != ''
+                          ? faltaComponentes.text
+                          : 'null',
+                      fechaCompraNuevoComponente.text != ''
+                          ? fechaCompraNuevoComponente.text
+                          : 'null',
+                      fechaReparacionNuevoComponente.text != ''
+                          ? fechaReparacionNuevoComponente.text
+                          : 'null',
+                      concentracionMetano.text != ''
+                          ? concentracionMetano.text
+                          : 'null',
+                      equipoComponente: equipoComponente.text != ''
+                          ? equipoComponente.text
+                          : 'null',
+                      fechaInicioInspeccion: fechaInicioInspeccion.text != ''
+                          ? fechaInicioInspeccion.text
+                          : 'null',
+                      horaInicioInspeccion: horaInicioInspeccion.text != ''
+                          ? horaInicioInspeccion.text
+                          : 'null',
+                      fechafinalizacionInspeccion:
+                          fechafinalizacionInspeccion.text != ''
+                              ? fechafinalizacionInspeccion.text
+                              : 'null',
+                      horafinalizacionInspeccion:
+                          horafinalizacionInspeccion.text != ''
+                              ? horafinalizacionInspeccion.text
+                              : 'null',
+                      temperatura:
+                          temperatura.text != '' ? temperatura.text : 'null',
+                      corrienteAireKMH: corrienteAireKMH.text != ''
+                          ? corrienteAireKMH.text
+                          : 'null',
+                      foto: foto.text,
+                      fotoTermografica: fotoTermodinamica.text)),
                   salidaDatos(
-                      equipoComponente,
-                      fechaInicioInspeccion,
-                      horaInicioInspeccion,
-                      fechafinalizacionInspeccion,
-                      horafinalizacionInspeccion,
-                      temperatura,
-                      corrienteAireKMH,
-                      fuga,
-                      concentracion,
-                      reparado,
-                      fechaReparacion,
-                      horaReparacion,
-                      concentracionFuga,
-                      faltaComponentes,
-                      fechaCompraNuevoComponente,
-                      fechaReparacionNuevoComponente,
-                      concentracionMetano)
+                    equipoComponente,
+                    fechaInicioInspeccion,
+                    horaInicioInspeccion,
+                    fechafinalizacionInspeccion,
+                    horafinalizacionInspeccion,
+                    temperatura,
+                    corrienteAireKMH,
+                    fuga,
+                    concentracion,
+                    reparado,
+                    fechaReparacion,
+                    horaReparacion,
+                    concentracionFuga,
+                    faltaComponentes,
+                    fechaCompraNuevoComponente,
+                    fechaReparacionNuevoComponente,
+                    concentracionMetano,
+                    foto,
+                    fotoTermodinamica,
+                  ),
+                  equipoComponente.text = '',
+                  fechaInicioInspeccion.text = '',
+                  horaInicioInspeccion.text = '',
+                  fechafinalizacionInspeccion.text = '',
+                  horafinalizacionInspeccion.text = '',
+                  temperatura.text = '',
+                  corrienteAireKMH.text = '',
+                  fuga.text = '',
+                  concentracion.text = '',
+                  reparado.text = '',
+                  fechaReparacion.text = '',
+                  horaReparacion.text = '',
+                  concentracionFuga.text = '',
+                  faltaComponentes.text = '',
+                  fechaCompraNuevoComponente.text = '',
+                  fechaReparacionNuevoComponente.text = '',
+                  concentracionMetano.text = '',
+                  foto.text = '',
+                  fotoTermodinamica.text = '',
+                  hayfugas.setFuga = '',
+                  fueReperado.setReparado = '',
+                  Navigator.pushNamed(context, 'home'),
                 },
                 child: const Text('Guardar'),
               ),
@@ -224,12 +324,20 @@ class CampoCheckBoxAlert extends StatelessWidget {
       required this.fuga,
       required this.hinText,
       required this.concentracion,
-      required this.reparado});
+      required this.reparado,
+      required this.fechaReparacion,
+      required this.horaReparacion,
+      required this.concentracionFuga});
 
   final TextEditingController fuga;
   final TextEditingController concentracion;
   final TextEditingController reparado;
   final String hinText;
+
+  // REPARADO SI
+  final TextEditingController fechaReparacion;
+  final TextEditingController horaReparacion;
+  final TextEditingController concentracionFuga;
 
   @override
   Widget build(BuildContext context) {
@@ -275,6 +383,7 @@ class CampoCheckBoxAlert extends StatelessWidget {
 
   mostrarAlerta(BuildContext context) {
     final hayfugas = Provider.of<FugaProvider>(context, listen: false);
+    final fueReperado = Provider.of<ReparadoProvider>(context, listen: false);
 
     showDialog(
       context: context,
@@ -287,8 +396,12 @@ class CampoCheckBoxAlert extends StatelessWidget {
               onPressed: () {
                 fuga.text = 'No';
                 hayfugas.setFuga = fuga.text;
+                fueReperado.setReparado = '';
                 concentracion.text = '';
                 reparado.text = '';
+                fechaReparacion.text = '';
+                horaReparacion.text = '';
+                concentracionFuga.text = '';
                 Navigator.of(context).pop();
               },
             ),
@@ -297,8 +410,12 @@ class CampoCheckBoxAlert extends StatelessWidget {
               onPressed: () {
                 fuga.text = 'Si';
                 hayfugas.setFuga = fuga.text;
+                fueReperado.setReparado = '';
                 concentracion.text = '';
                 reparado.text = '';
+                fechaReparacion.text = '';
+                horaReparacion.text = '';
+                concentracionFuga.text = '';
                 Navigator.of(context).pop();
               },
             ),
@@ -326,7 +443,9 @@ salidaDatos(
     TextEditingController faltaComponentes,
     TextEditingController fechaCompraNuevoComponente,
     TextEditingController fechaReparacionNuevoComponente,
-    TextEditingController concentracionMetano) {
+    TextEditingController concentracionMetano,
+    TextEditingController foto,
+    TextEditingController fotoTermodinamica) {
   print('SALIDA DE LOS DATOS DE INSPECCION');
   print('1 ${equipoComponente.text}');
   print('2 ${fechaInicioInspeccion.text}');
@@ -345,4 +464,6 @@ salidaDatos(
   print('15 ${fechaCompraNuevoComponente.text}');
   print('16 ${fechaReparacionNuevoComponente.text}');
   print('17 ${concentracionMetano.text}');
+  print('18 ${foto.text}');
+  print('19 ${fotoTermodinamica.text}');
 }

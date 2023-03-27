@@ -1,5 +1,5 @@
 class Inspeccion {
-  final int inspeccionID;
+  //final int inspeccionID;
 
   // INSPECCIÓN (REQUERIDO)
   final String equipoComponente;
@@ -34,7 +34,7 @@ class Inspeccion {
   final String fotoTermografica;
 
   Inspeccion(
-      this.inspeccionID,
+      //this.inspeccionID,
       this.fuga,
       this.concentracion,
       this.reparado,
@@ -57,7 +57,7 @@ class Inspeccion {
 
   Map<String, dynamic> toMap() {
     return {
-      'inspeccionID': inspeccionID,
+      //'inspeccionID': inspeccionID,
       'equipoComponente': equipoComponente,
       'fechaInicioInspeccion': fechaInicioInspeccion,
       'horaInicioInspeccion': horaInicioInspeccion,

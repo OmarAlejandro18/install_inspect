@@ -14,7 +14,7 @@ class QueryInstalaciones with ChangeNotifier {
       maps.length,
       (i) {
         return Inspeccion(
-            maps[i]['inspeccionID'],
+            //maps[i]['inspeccionID'],
             maps[i]['fuga'],
             maps[i]['concentracion'],
             maps[i]['reparado'],

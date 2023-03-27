@@ -15,6 +15,7 @@ class FormularioInstalacionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Center(child: Text('Instalacion'))),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -64,26 +65,28 @@ class FormularioInstalacionScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () => {
-                  salidaEstandar(nombre, inspector, instrumento, lugar),
-                  if (nombre.text != '' &&
-                      inspector.text != '' &&
-                      instrumento.text != '' &&
-                      lugar.text != '')
+                  if (_formKey.currentState!.validate())
                     {
+                      salidaEstandar(nombre, inspector, instrumento, lugar),
                       InsertarInstalacion().agregarInstalacion(Instalacion(
-                          instalacionID: id += 1,
+                          //instalacionID: id += 1,
                           nombre: nombre.text,
                           inspector: inspector.text,
                           instrumento: instrumento.text,
                           lugar: lugar.text,
                           ubicacion: ubicacion.text)),
+                      nombre.text = '',
+                      inspector.text = '',
+                      instrumento.text = '',
+                      lugar.text = '',
+                      ubicacion.text = '',
                       Navigator.pushNamed(context, 'formInspeccion')
                     }
                   else
                     {
                       print(
                           'no se puede agregar la nota porque los campos deben ser obligatorios')
-                    }
+                    },
                 },
                 child: const Text('Guardar'),
               )
@@ -125,6 +128,13 @@ class InputDato extends StatelessWidget {
           style: const TextStyle(
             color: Colors.black87,
           ),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Por favor ingrese $hinText';
+            }
+            print('estoy en el validador');
+            return null;
+          },
           decoration: InputDecoration(
             border: InputBorder.none,
             contentPadding: const EdgeInsets.only(top: 14),

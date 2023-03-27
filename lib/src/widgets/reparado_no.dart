@@ -26,7 +26,7 @@ class ReparadoNo extends StatelessWidget {
             controlador: fechaCompraNuevoComponente,
             hinText: 'Fecha de compra nuevo componente'),
         CampoFecha(
-            controlador: fechaCompraNuevoComponente,
+            controlador: fechaReparacionNuevoComponente,
             hinText: 'Fecha de reparacion usando nuevo componente'),
         CampoTexto(
             textoController: concentracionMetano,
