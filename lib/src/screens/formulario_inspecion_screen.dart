@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/insertar_inspeccion.dart';
 import 'package:install_inspect/src/models/inspeccion_model.dart';
 import 'package:install_inspect/src/providers/providers.dart';
-import 'package:install_inspect/src/widgets/image_picker.dart';
 import 'package:install_inspect/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -47,9 +46,9 @@ class _FormularioInspeccionScreenState
   final foto = TextEditingController();
   final fotoTermodinamica = TextEditingController();
 
-  int inspeccionID = 0;
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     final hayfugas = Provider.of<FugaProvider>(context);
     final fueReperado = Provider.of<ReparadoProvider>(context, listen: false);
 
@@ -68,7 +67,7 @@ class _FormularioInspeccionScreenState
                 height: 50,
               ),
               const Text(
-                'Ingresa los datos de la instalación',
+                'Ingresa los datos de la Inspección',
                 style: TextStyle(fontSize: 18),
               ),
               const SizedBox(
@@ -132,6 +131,8 @@ class _FormularioInspeccionScreenState
                 fechaReparacion: fechaReparacion,
                 horaReparacion: horaReparacion,
                 concentracionFuga: concentracionFuga,
+                foto: foto,
+                fotoTermodinamica: fotoTermodinamica,
               ),
               const SizedBox(
                 height: 15,
@@ -141,7 +142,6 @@ class _FormularioInspeccionScreenState
                   ? FugaSI(
                       concentracion: concentracion,
                       reparado: reparado,
-                      //fechaReparacion: fechaReparacion,
                       fechaReparacion: fechaReparacion,
                       horaReparacion: horaReparacion,
                       concentracionFuga: concentracionFuga,
@@ -149,118 +149,116 @@ class _FormularioInspeccionScreenState
                       fechaCompraNuevoComponente: fechaCompraNuevoComponente,
                       fechaReparacionNuevoComponente:
                           fechaReparacionNuevoComponente,
-                      concentracionMetano: concentracionMetano,
+                      concentracionMetano: concentracionMetano, 
+                      foto: foto,
+                      fotoTermodinamica: fotoTermodinamica,
                     )
                   : Container(),
               const SizedBox(
-                height: 50,
+                height: 5,
               ),
-
-              ElevatedButton(
-                  onPressed: () {
-                    foto.text = cargarFoto();
-                  },
-                  child: const Text('Cargar fotografia')),
-              ElevatedButton(
-                  onPressed: () {
-                    fotoTermodinamica.text = cargarFotoTermografica();
-                  },
-                  child: const Text('Cargar fotografia Termodinamica')),
-              ElevatedButton(
-                onPressed: () => {
-                  InsertarInspeccion().agregarInspeccion(Inspeccion(
-                      //inspeccionID += 1,
-                      fuga.text,
-                      concentracion.text != '' ? concentracion.text : 'null',
-                      reparado.text != '' ? reparado.text : 'null',
-                      fechaReparacion.text != ''
-                          ? fechaReparacion.text
-                          : 'null',
-                      horaReparacion.text != '' ? horaReparacion.text : 'null',
-                      concentracionFuga.text != ''
-                          ? concentracionFuga.text
-                          : 'null',
-                      faltaComponentes.text != ''
-                          ? faltaComponentes.text
-                          : 'null',
-                      fechaCompraNuevoComponente.text != ''
-                          ? fechaCompraNuevoComponente.text
-                          : 'null',
-                      fechaReparacionNuevoComponente.text != ''
-                          ? fechaReparacionNuevoComponente.text
-                          : 'null',
-                      concentracionMetano.text != ''
-                          ? concentracionMetano.text
-                          : 'null',
-                      equipoComponente: equipoComponente.text != ''
-                          ? equipoComponente.text
-                          : 'null',
-                      fechaInicioInspeccion: fechaInicioInspeccion.text != ''
-                          ? fechaInicioInspeccion.text
-                          : 'null',
-                      horaInicioInspeccion: horaInicioInspeccion.text != ''
-                          ? horaInicioInspeccion.text
-                          : 'null',
-                      fechafinalizacionInspeccion:
-                          fechafinalizacionInspeccion.text != ''
-                              ? fechafinalizacionInspeccion.text
-                              : 'null',
-                      horafinalizacionInspeccion:
-                          horafinalizacionInspeccion.text != ''
-                              ? horafinalizacionInspeccion.text
-                              : 'null',
-                      temperatura:
-                          temperatura.text != '' ? temperatura.text : 'null',
-                      corrienteAireKMH: corrienteAireKMH.text != ''
-                          ? corrienteAireKMH.text
-                          : 'null',
-                      foto: foto.text,
-                      fotoTermografica: fotoTermodinamica.text)),
-                  salidaDatos(
-                    equipoComponente,
-                    fechaInicioInspeccion,
-                    horaInicioInspeccion,
-                    fechafinalizacionInspeccion,
-                    horafinalizacionInspeccion,
-                    temperatura,
-                    corrienteAireKMH,
-                    fuga,
-                    concentracion,
-                    reparado,
-                    fechaReparacion,
-                    horaReparacion,
-                    concentracionFuga,
-                    faltaComponentes,
-                    fechaCompraNuevoComponente,
-                    fechaReparacionNuevoComponente,
-                    concentracionMetano,
-                    foto,
-                    fotoTermodinamica,
+              SizedBox(
+                width: size.width * 0.85,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+                    ),
                   ),
-                  equipoComponente.text = '',
-                  fechaInicioInspeccion.text = '',
-                  horaInicioInspeccion.text = '',
-                  fechafinalizacionInspeccion.text = '',
-                  horafinalizacionInspeccion.text = '',
-                  temperatura.text = '',
-                  corrienteAireKMH.text = '',
-                  fuga.text = '',
-                  concentracion.text = '',
-                  reparado.text = '',
-                  fechaReparacion.text = '',
-                  horaReparacion.text = '',
-                  concentracionFuga.text = '',
-                  faltaComponentes.text = '',
-                  fechaCompraNuevoComponente.text = '',
-                  fechaReparacionNuevoComponente.text = '',
-                  concentracionMetano.text = '',
-                  foto.text = '',
-                  fotoTermodinamica.text = '',
-                  hayfugas.setFuga = '',
-                  fueReperado.setReparado = '',
-                  Navigator.pushNamed(context, 'home'),
-                },
-                child: const Text('Guardar'),
+                  onPressed: () => {
+                    InsertarInspeccion().agregarInspeccion(Inspeccion(
+                        fuga.text,
+                        concentracion.text != '' ? concentracion.text : 'null',
+                        reparado.text != '' ? reparado.text : 'null',
+                        fechaReparacion.text != ''
+                            ? fechaReparacion.text
+                            : 'null',
+                        horaReparacion.text != '' ? horaReparacion.text : 'null',
+                        concentracionFuga.text != ''
+                            ? concentracionFuga.text
+                            : 'null',
+                        faltaComponentes.text != ''
+                            ? faltaComponentes.text
+                            : 'null',
+                        fechaCompraNuevoComponente.text != ''
+                            ? fechaCompraNuevoComponente.text
+                            : 'null',
+                        fechaReparacionNuevoComponente.text != ''
+                            ? fechaReparacionNuevoComponente.text
+                            : 'null',
+                        concentracionMetano.text != ''
+                            ? concentracionMetano.text
+                            : 'null',
+                        equipoComponente: equipoComponente.text != ''
+                            ? equipoComponente.text
+                            : 'null',
+                        fechaInicioInspeccion: fechaInicioInspeccion.text != ''
+                            ? fechaInicioInspeccion.text
+                            : 'null',
+                        horaInicioInspeccion: horaInicioInspeccion.text != ''
+                            ? horaInicioInspeccion.text
+                            : 'null',
+                        fechafinalizacionInspeccion:
+                            fechafinalizacionInspeccion.text != ''
+                                ? fechafinalizacionInspeccion.text
+                                : 'null',
+                        horafinalizacionInspeccion:
+                            horafinalizacionInspeccion.text != ''
+                                ? horafinalizacionInspeccion.text
+                                : 'null',
+                        temperatura:
+                            temperatura.text != '' ? temperatura.text : 'null',
+                        corrienteAireKMH: corrienteAireKMH.text != ''
+                            ? corrienteAireKMH.text
+                            : 'null',
+                        foto: foto.text,
+                        fotoTermografica: fotoTermodinamica.text)),
+                    salidaDatos(
+                      equipoComponente,
+                      fechaInicioInspeccion,
+                      horaInicioInspeccion,
+                      fechafinalizacionInspeccion,
+                      horafinalizacionInspeccion,
+                      temperatura,
+                      corrienteAireKMH,
+                      fuga,
+                      concentracion,
+                      reparado,
+                      fechaReparacion,
+                      horaReparacion,
+                      concentracionFuga,
+                      faltaComponentes,
+                      fechaCompraNuevoComponente,
+                      fechaReparacionNuevoComponente,
+                      concentracionMetano,
+                      foto,
+                      fotoTermodinamica,
+                    ),
+                    equipoComponente.text = '',
+                    fechaInicioInspeccion.text = '',
+                    horaInicioInspeccion.text = '',
+                    fechafinalizacionInspeccion.text = '',
+                    horafinalizacionInspeccion.text = '',
+                    temperatura.text = '',
+                    corrienteAireKMH.text = '',
+                    fuga.text = '',
+                    concentracion.text = '',
+                    reparado.text = '',
+                    fechaReparacion.text = '',
+                    horaReparacion.text = '',
+                    concentracionFuga.text = '',
+                    faltaComponentes.text = '',
+                    fechaCompraNuevoComponente.text = '',
+                    fechaReparacionNuevoComponente.text = '',
+                    concentracionMetano.text = '',
+                    foto.text = '',
+                    fotoTermodinamica.text = '',
+                    hayfugas.setFuga = '',
+                    fueReperado.setReparado = '',
+                    Navigator.pushNamed(context, 'home'),
+                  },
+                  child: const Text('Guardar'),
+                ),
               ),
               const SizedBox(
                 height: 50,
@@ -327,7 +325,11 @@ class CampoCheckBoxAlert extends StatelessWidget {
       required this.reparado,
       required this.fechaReparacion,
       required this.horaReparacion,
-      required this.concentracionFuga});
+      required this.concentracionFuga, 
+      required this.foto, 
+      required this.fotoTermodinamica
+      }
+      );
 
   final TextEditingController fuga;
   final TextEditingController concentracion;
@@ -339,6 +341,10 @@ class CampoCheckBoxAlert extends StatelessWidget {
   final TextEditingController horaReparacion;
   final TextEditingController concentracionFuga;
 
+  // REPARADO NO
+  final TextEditingController foto;
+  final TextEditingController fotoTermodinamica;
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -402,6 +408,8 @@ class CampoCheckBoxAlert extends StatelessWidget {
                 fechaReparacion.text = '';
                 horaReparacion.text = '';
                 concentracionFuga.text = '';
+                foto.text = '';
+                fotoTermodinamica.text = '';
                 Navigator.of(context).pop();
               },
             ),
@@ -416,6 +424,8 @@ class CampoCheckBoxAlert extends StatelessWidget {
                 fechaReparacion.text = '';
                 horaReparacion.text = '';
                 concentracionFuga.text = '';
+                foto.text = '';
+                fotoTermodinamica.text = '';
                 Navigator.of(context).pop();
               },
             ),

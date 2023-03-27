@@ -1,36 +1,94 @@
 import 'package:flutter/material.dart';
+import 'package:install_inspect/src/widgets/image_picker.dart';
 import 'package:install_inspect/src/widgets/widgets.dart';
+import 'dart:convert';
 
-class ReparadoNo extends StatelessWidget {
+class ReparadoNo extends StatefulWidget {
   const ReparadoNo(
       {super.key,
       required this.faltaComponentes,
       required this.fechaCompraNuevoComponente,
       required this.fechaReparacionNuevoComponente,
-      required this.concentracionMetano});
+      required this.concentracionMetano,
+      required this.foto,
+      required this.fotoTermodinamica
+      });
 
   final TextEditingController faltaComponentes;
   final TextEditingController fechaCompraNuevoComponente;
   final TextEditingController fechaReparacionNuevoComponente;
   final TextEditingController concentracionMetano;
+  final TextEditingController foto;
+  final TextEditingController fotoTermodinamica;
 
   @override
+  State<ReparadoNo> createState() => _ReparadoNoState();
+}
+
+class _ReparadoNoState extends State<ReparadoNo> {
+  @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Column(
       children: [
         CampoTexto(
-          textoController: faltaComponentes,
+          textoController: widget.faltaComponentes,
           hinText: 'Reparación falta de componentes',
         ),
         CampoFecha(
-            controlador: fechaCompraNuevoComponente,
+            controlador: widget.fechaCompraNuevoComponente,
             hinText: 'Fecha de compra nuevo componente'),
         CampoFecha(
-            controlador: fechaReparacionNuevoComponente,
+            controlador: widget.fechaReparacionNuevoComponente,
             hinText: 'Fecha de reparacion usando nuevo componente'),
         CampoTexto(
-            textoController: concentracionMetano,
+            textoController: widget.concentracionMetano,
             hinText: 'Concentración de Metano'),
+
+        SizedBox(
+                width: size.width * 0.85,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                    onPressed: () async {
+                      widget.foto.text = await cargarFoto();
+                      setState(() {
+                      },);
+                    },
+                    child: const Text('Subir Fotografía')),
+              ),
+          widget.foto.text != 'null' && widget.foto.text != '' ?
+          SizedBox(
+            width: 200,
+            height: 100,
+            child:  (widget.foto.text != 'null' && widget.foto.text != '') ? Image.memory(base64Decode(widget.foto.text)) : const Text(''),
+          ):
+          const SizedBox(),
+          SizedBox(
+          width: size.width * 0.85,
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+              ),
+              onPressed: () async {
+                widget.fotoTermodinamica.text = await cargarFotoTermografica();
+                setState(() {
+                },);
+              },
+              child: const Text('Subir Fotografía Termodinámica')),
+        ),
+        widget.fotoTermodinamica.text != 'null' && widget.fotoTermodinamica.text != '' ?
+          SizedBox(
+            width: 200,
+            height: 100,
+            child:  (widget.fotoTermodinamica.text != 'null' && widget.fotoTermodinamica.text != '') ? Image.memory(base64Decode(widget.fotoTermodinamica.text)) : const Text(''),
+          ):
+          const SizedBox(),
       ],
     );
   }

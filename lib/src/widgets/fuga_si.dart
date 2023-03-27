@@ -16,7 +16,10 @@ class FugaSI extends StatelessWidget {
       required this.faltaComponentes,
       required this.fechaCompraNuevoComponente,
       required this.fechaReparacionNuevoComponente,
-      required this.concentracionMetano});
+      required this.concentracionMetano, 
+      // REPARADO NO
+      required this.foto, 
+      required this.fotoTermodinamica});
 
   final TextEditingController concentracion;
   final TextEditingController reparado;
@@ -34,6 +37,8 @@ class FugaSI extends StatelessWidget {
   final TextEditingController fechaCompraNuevoComponente;
   final TextEditingController fechaReparacionNuevoComponente;
   final TextEditingController concentracionMetano;
+  final TextEditingController foto;
+  final TextEditingController fotoTermodinamica;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +62,9 @@ class FugaSI extends StatelessWidget {
             faltaComponentes: faltaComponentes,
             fechaCompraNuevoComponente: fechaCompraNuevoComponente,
             fechaReparacionNuevoComponente: fechaReparacionNuevoComponente,
-            concentracionMetano: concentracionMetano),
+            concentracionMetano: concentracionMetano,
+            foto: foto,
+            fotoTermodinamica: fotoTermodinamica,),
         const SizedBox(
           height: 10,
         ),
@@ -72,7 +79,10 @@ class FugaSI extends StatelessWidget {
                 faltaComponentes: faltaComponentes,
                 fechaCompraNuevoComponente: fechaCompraNuevoComponente,
                 fechaReparacionNuevoComponente: fechaReparacionNuevoComponente,
-                concentracionMetano: concentracionMetano)
+                concentracionMetano: concentracionMetano,
+                foto: foto,
+                fotoTermodinamica: fotoTermodinamica,
+              )
             : Container(),
         const SizedBox(
           height: 10,
@@ -142,7 +152,7 @@ class CampoPudoSerRapado extends StatelessWidget {
       required this.faltaComponentes,
       required this.fechaCompraNuevoComponente,
       required this.fechaReparacionNuevoComponente,
-      required this.concentracionMetano});
+      required this.concentracionMetano, required this.foto, required this.fotoTermodinamica});
 
   final TextEditingController reparado;
   final String hinText;
@@ -153,11 +163,12 @@ class CampoPudoSerRapado extends StatelessWidget {
   final TextEditingController concentracionFuga;
 
   // REPARADO NO
-
   final TextEditingController faltaComponentes;
   final TextEditingController fechaCompraNuevoComponente;
   final TextEditingController fechaReparacionNuevoComponente;
   final TextEditingController concentracionMetano;
+  final TextEditingController foto;
+  final TextEditingController fotoTermodinamica;
 
   @override
   Widget build(BuildContext context) {
@@ -220,6 +231,8 @@ class CampoPudoSerRapado extends StatelessWidget {
                 fechaCompraNuevoComponente.text = '';
                 fechaReparacionNuevoComponente.text = '';
                 concentracionMetano.text = '';
+                foto.text = '';
+                fotoTermodinamica.text = '';
                 // REPARADO SI
                 fechaReparacion.text = '';
                 horaReparacion.text = '';
