@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/insertar_inspeccion.dart';
 import 'package:install_inspect/src/models/inspeccion_model.dart';
 import 'package:install_inspect/src/providers/providers.dart';
+import 'package:install_inspect/src/services/firebase_services.dart';
 import 'package:install_inspect/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -213,6 +214,27 @@ class _FormularioInspeccionScreenState
                             : 'null',
                         foto: foto.text,
                         fotoTermografica: fotoTermodinamica.text)),
+                    agregarInspeccion(
+                    equipoComponente.text,
+                    fechaInicioInspeccion.text,
+                    horaInicioInspeccion.text,
+                    fechafinalizacionInspeccion.text,
+                    horafinalizacionInspeccion.text,
+                    temperatura.text,
+                    corrienteAireKMH.text,
+                    fuga.text,
+                    concentracion.text,
+                    reparado.text,
+                    fechaReparacion.text,
+                    horaReparacion.text,
+                    concentracionFuga.text,
+                    faltaComponentes.text,
+                    fechaCompraNuevoComponente.text,
+                    fechaReparacionNuevoComponente.text,
+                    concentracionMetano.text,
+                    foto.text,
+                    fotoTermodinamica.text,
+                    ),
                     salidaDatos(
                       equipoComponente,
                       fechaInicioInspeccion,

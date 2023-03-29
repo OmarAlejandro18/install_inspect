@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/insertar_instalacion.dart';
 import 'package:install_inspect/src/models/instalacion_model.dart';
+import 'package:install_inspect/src/services/firebase_services.dart';
 
 class FormularioInstalacionScreen extends StatelessWidget {
   FormularioInstalacionScreen({super.key});
@@ -64,7 +65,7 @@ class FormularioInstalacionScreen extends StatelessWidget {
                 height: 50,
               ),
               ElevatedButton(
-                onPressed: () => {
+                onPressed: () =>  {
                   if (_formKey.currentState!.validate())
                     {
                       salidaEstandar(nombre, inspector, instrumento, lugar),
@@ -75,6 +76,7 @@ class FormularioInstalacionScreen extends StatelessWidget {
                           instrumento: instrumento.text,
                           lugar: lugar.text,
                           ubicacion: ubicacion.text)),
+                      agregarInstalacion(nombre.text, inspector.text, instrumento.text, lugar.text,ubicacion.text),
                       nombre.text = '',
                       inspector.text = '',
                       instrumento.text = '',

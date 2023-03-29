@@ -10,11 +10,19 @@ class HomeScreen extends StatelessWidget {
       body: FutureBuilder(
           future: getInstalacion(),
           builder: ((context, snapshot) {
-            return ListView.builder(
+            if (snapshot.hasData){
+              return ListView.builder(
                 itemCount: snapshot.data?.length,
                 itemBuilder: (context, i) {
                   return Text(snapshot.data?[i]['nombre']);
                 });
+            }else{
+              return const Center(
+                child: CircularProgressIndicator(
+
+                ),
+              );
+            }
           })),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, 'formInstalacion'),
