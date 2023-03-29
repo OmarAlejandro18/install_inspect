@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1013860949516",
+    "project_id": "iktanstrategies-456ee",
+    "storage_bucket": "iktanstrategies-456ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013860949516:android:01035a4a46577c7dfd1829",
+        "android_client_info": {
+          "package_name": "com.example.install_inspect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013860949516-c7olh6immbf9v57o8859urhuio2ah94h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIsxmIxUkNY77pnazTy9p46KLtMcgskgw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013860949516-c7olh6immbf9v57o8859urhuio2ah94h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
