@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:install_inspect/src/db/insertar_inspeccion.dart';
 import 'package:install_inspect/src/models/inspeccion_model.dart';
 import 'package:install_inspect/src/providers/providers.dart';
 import 'package:install_inspect/src/services/firebase_services.dart';
+import 'package:install_inspect/src/widgets/image_picker.dart';
 import 'package:install_inspect/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -37,15 +40,20 @@ class _FormularioInspeccionScreenState
   final horaReparacion = TextEditingController();
   final concentracionFuga = TextEditingController();
 
-  // Reparado NO
-
+  // REPRADO NO
   final faltaComponentes = TextEditingController();
   final fechaCompraNuevoComponente = TextEditingController();
   final fechaReparacionNuevoComponente = TextEditingController();
   final concentracionMetano = TextEditingController();
 
+  // IMAGENES
   final foto = TextEditingController();
   final fotoTermodinamica = TextEditingController();
+
+  late File imgUploadF;
+  XFile? imageF;
+  late File imgUploadT;
+  XFile? imageT;
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +146,6 @@ class _FormularioInspeccionScreenState
               const SizedBox(
                 height: 15,
               ),
-
               hayfugas.getFuga == 'Si'
                   ? FugaSI(
                       concentracion: concentracion,
@@ -150,7 +157,7 @@ class _FormularioInspeccionScreenState
                       fechaCompraNuevoComponente: fechaCompraNuevoComponente,
                       fechaReparacionNuevoComponente:
                           fechaReparacionNuevoComponente,
-                      concentracionMetano: concentracionMetano, 
+                      concentracionMetano: concentracionMetano,
                       foto: foto,
                       fotoTermodinamica: fotoTermodinamica,
                     )
@@ -158,83 +165,230 @@ class _FormularioInspeccionScreenState
               const SizedBox(
                 height: 5,
               ),
+              // TOMAR FOTO
+              SizedBox(
+                width: size.width * 0.85,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    onPressed: () async {
+                      imageF = await cargarFotoFirestore();
+                      if (imageF == null) {
+                        foto.text = 'null';
+                      } else {
+                        setState(() {
+                          imgUploadF = File(imageF!.path);
+                          foto.text = imgUploadF.path;
+                        });
+                      }
+                    },
+                    child: const Text('Tomar Fotografía')),
+              ),
+              foto.text != 'null' && foto.text != ''
+                  ? SizedBox(
+                      width: 200,
+                      height: 100,
+                      child: (foto.text != 'null' && foto.text != '')
+                          ? Image.file(imgUploadF)
+                          : const Text(''),
+                    )
+                  : const SizedBox(),
+
+              SizedBox(
+                width: size.width * 0.85,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    onPressed: () async {
+                      imageT = await cargarFotoTermograficaFirestore();
+                      if (imageT == null) {
+                        fotoTermodinamica.text = 'null';
+                      } else {
+                        setState(() {
+                          imgUploadT = File(imageT!.path);
+                          fotoTermodinamica.text = imgUploadT.path;
+                        });
+                      }
+                    },
+                    child: const Text('Tomar Fotografía Termografica')),
+              ),
+              fotoTermodinamica.text != 'null' && fotoTermodinamica.text != ''
+                  ? SizedBox(
+                      width: 200,
+                      height: 100,
+                      child: (fotoTermodinamica.text != 'null' &&
+                              fotoTermodinamica.text != '')
+                          ? Image.file(imgUploadT)
+                          : const Text(''),
+                    )
+                  : const SizedBox(),
               SizedBox(
                 width: size.width * 0.85,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
-                  onPressed: () => {
+                  onPressed: () {
+                    if (foto.text != '' && fotoTermodinamica.text != '') {
+                      subirFotoFireStorage(File(foto.text));
+                      subirfotoTermograficaFireStorage(
+                          File(fotoTermodinamica.text));
+                    }
                     InsertarInspeccion().agregarInspeccion(Inspeccion(
-                        fuga.text,
-                        concentracion.text != '' ? concentracion.text : 'null',
-                        reparado.text != '' ? reparado.text : 'null',
-                        fechaReparacion.text != ''
-                            ? fechaReparacion.text
-                            : 'null',
-                        horaReparacion.text != '' ? horaReparacion.text : 'null',
-                        concentracionFuga.text != ''
-                            ? concentracionFuga.text
-                            : 'null',
-                        faltaComponentes.text != ''
-                            ? faltaComponentes.text
-                            : 'null',
-                        fechaCompraNuevoComponente.text != ''
-                            ? fechaCompraNuevoComponente.text
-                            : 'null',
-                        fechaReparacionNuevoComponente.text != ''
-                            ? fechaReparacionNuevoComponente.text
-                            : 'null',
-                        concentracionMetano.text != ''
-                            ? concentracionMetano.text
-                            : 'null',
-                        equipoComponente: equipoComponente.text != ''
-                            ? equipoComponente.text
-                            : 'null',
-                        fechaInicioInspeccion: fechaInicioInspeccion.text != ''
-                            ? fechaInicioInspeccion.text
-                            : 'null',
-                        horaInicioInspeccion: horaInicioInspeccion.text != ''
-                            ? horaInicioInspeccion.text
-                            : 'null',
-                        fechafinalizacionInspeccion:
-                            fechafinalizacionInspeccion.text != ''
-                                ? fechafinalizacionInspeccion.text
-                                : 'null',
-                        horafinalizacionInspeccion:
-                            horafinalizacionInspeccion.text != ''
-                                ? horafinalizacionInspeccion.text
-                                : 'null',
-                        temperatura:
-                            temperatura.text != '' ? temperatura.text : 'null',
-                        corrienteAireKMH: corrienteAireKMH.text != ''
-                            ? corrienteAireKMH.text
-                            : 'null',
-                        foto: foto.text,
-                        fotoTermografica: fotoTermodinamica.text)),
-                    agregarInspeccion(
-                    equipoComponente.text,
-                    fechaInicioInspeccion.text,
-                    horaInicioInspeccion.text,
-                    fechafinalizacionInspeccion.text,
-                    horafinalizacionInspeccion.text,
-                    temperatura.text,
-                    corrienteAireKMH.text,
-                    fuga.text,
-                    concentracion.text,
-                    reparado.text,
-                    fechaReparacion.text,
-                    horaReparacion.text,
-                    concentracionFuga.text,
-                    faltaComponentes.text,
-                    fechaCompraNuevoComponente.text,
-                    fechaReparacionNuevoComponente.text,
-                    concentracionMetano.text,
-                    foto.text,
-                    fotoTermodinamica.text,
-                    ),
+                      fuga.text,
+                      concentracion.text != '' ? concentracion.text : 'null',
+                      reparado.text != '' ? reparado.text : 'null',
+                      fechaReparacion.text != ''
+                          ? fechaReparacion.text
+                          : 'null',
+                      horaReparacion.text != '' ? horaReparacion.text : 'null',
+                      concentracionFuga.text != ''
+                          ? concentracionFuga.text
+                          : 'null',
+                      faltaComponentes.text != ''
+                          ? faltaComponentes.text
+                          : 'null',
+                      fechaCompraNuevoComponente.text != ''
+                          ? fechaCompraNuevoComponente.text
+                          : 'null',
+                      fechaReparacionNuevoComponente.text != ''
+                          ? fechaReparacionNuevoComponente.text
+                          : 'null',
+                      concentracionMetano.text != ''
+                          ? concentracionMetano.text
+                          : 'null',
+                      equipoComponente: equipoComponente.text != ''
+                          ? equipoComponente.text
+                          : 'null',
+                      fechaInicioInspeccion: fechaInicioInspeccion.text != ''
+                          ? fechaInicioInspeccion.text
+                          : 'null',
+                      horaInicioInspeccion: horaInicioInspeccion.text != ''
+                          ? horaInicioInspeccion.text
+                          : 'null',
+                      fechafinalizacionInspeccion:
+                          fechafinalizacionInspeccion.text != ''
+                              ? fechafinalizacionInspeccion.text
+                              : 'null',
+                      horafinalizacionInspeccion:
+                          horafinalizacionInspeccion.text != ''
+                              ? horafinalizacionInspeccion.text
+                              : 'null',
+                      temperatura:
+                          temperatura.text != '' ? temperatura.text : 'null',
+                      corrienteAireKMH: corrienteAireKMH.text != ''
+                          ? corrienteAireKMH.text
+                          : 'null',
+                      foto: foto.text,
+                      fotoTermografica: fotoTermodinamica.text,
+                      timestamp: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                    ));
+                    agregarInspeccion(Inspeccion(
+                      fuga.text,
+                      concentracion.text != '' ? concentracion.text : 'null',
+                      reparado.text != '' ? reparado.text : 'null',
+                      fechaReparacion.text != ''
+                          ? fechaReparacion.text
+                          : 'null',
+                      horaReparacion.text != '' ? horaReparacion.text : 'null',
+                      concentracionFuga.text != ''
+                          ? concentracionFuga.text
+                          : 'null',
+                      faltaComponentes.text != ''
+                          ? faltaComponentes.text
+                          : 'null',
+                      fechaCompraNuevoComponente.text != ''
+                          ? fechaCompraNuevoComponente.text
+                          : 'null',
+                      fechaReparacionNuevoComponente.text != ''
+                          ? fechaReparacionNuevoComponente.text
+                          : 'null',
+                      concentracionMetano.text != ''
+                          ? concentracionMetano.text
+                          : 'null',
+                      equipoComponente: equipoComponente.text != ''
+                          ? equipoComponente.text
+                          : 'null',
+                      fechaInicioInspeccion: fechaInicioInspeccion.text != ''
+                          ? fechaInicioInspeccion.text
+                          : 'null',
+                      horaInicioInspeccion: horaInicioInspeccion.text != ''
+                          ? horaInicioInspeccion.text
+                          : 'null',
+                      fechafinalizacionInspeccion:
+                          fechafinalizacionInspeccion.text != ''
+                              ? fechafinalizacionInspeccion.text
+                              : 'null',
+                      horafinalizacionInspeccion:
+                          horafinalizacionInspeccion.text != ''
+                              ? horafinalizacionInspeccion.text
+                              : 'null',
+                      temperatura:
+                          temperatura.text != '' ? temperatura.text : 'null',
+                      corrienteAireKMH: corrienteAireKMH.text != ''
+                          ? corrienteAireKMH.text
+                          : 'null',
+                      foto: foto.text,
+                      fotoTermografica: fotoTermodinamica.text,
+                      timestamp: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                    ));
+                    // guardarInspeccionTiempoReal(Inspeccion(
+                    //   fuga.text,
+                    //   concentracion.text != '' ? concentracion.text : 'null',
+                    //   reparado.text != '' ? reparado.text : 'null',
+                    //   fechaReparacion.text != ''
+                    //       ? fechaReparacion.text
+                    //       : 'null',
+                    //   horaReparacion.text != '' ? horaReparacion.text : 'null',
+                    //   concentracionFuga.text != ''
+                    //       ? concentracionFuga.text
+                    //       : 'null',
+                    //   faltaComponentes.text != ''
+                    //       ? faltaComponentes.text
+                    //       : 'null',
+                    //   fechaCompraNuevoComponente.text != ''
+                    //       ? fechaCompraNuevoComponente.text
+                    //       : 'null',
+                    //   fechaReparacionNuevoComponente.text != ''
+                    //       ? fechaReparacionNuevoComponente.text
+                    //       : 'null',
+                    //   concentracionMetano.text != ''
+                    //       ? concentracionMetano.text
+                    //       : 'null',
+                    //   equipoComponente: equipoComponente.text != ''
+                    //       ? equipoComponente.text
+                    //       : 'null',
+                    //   fechaInicioInspeccion: fechaInicioInspeccion.text != ''
+                    //       ? fechaInicioInspeccion.text
+                    //       : 'null',
+                    //   horaInicioInspeccion: horaInicioInspeccion.text != ''
+                    //       ? horaInicioInspeccion.text
+                    //       : 'null',
+                    //   fechafinalizacionInspeccion:
+                    //       fechafinalizacionInspeccion.text != ''
+                    //           ? fechafinalizacionInspeccion.text
+                    //           : 'null',
+                    //   horafinalizacionInspeccion:
+                    //       horafinalizacionInspeccion.text != ''
+                    //           ? horafinalizacionInspeccion.text
+                    //           : 'null',
+                    //   temperatura:
+                    //       temperatura.text != '' ? temperatura.text : 'null',
+                    //   corrienteAireKMH: corrienteAireKMH.text != ''
+                    //       ? corrienteAireKMH.text
+                    //       : 'null',
+                    //   foto: foto.text,
+                    //   fotoTermografica: fotoTermodinamica.text,
+                    //   timestamp: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                    // ));
                     salidaDatos(
                       equipoComponente,
                       fechaInicioInspeccion,
@@ -255,29 +409,29 @@ class _FormularioInspeccionScreenState
                       concentracionMetano,
                       foto,
                       fotoTermodinamica,
-                    ),
-                    equipoComponente.text = '',
-                    fechaInicioInspeccion.text = '',
-                    horaInicioInspeccion.text = '',
-                    fechafinalizacionInspeccion.text = '',
-                    horafinalizacionInspeccion.text = '',
-                    temperatura.text = '',
-                    corrienteAireKMH.text = '',
-                    fuga.text = '',
-                    concentracion.text = '',
-                    reparado.text = '',
-                    fechaReparacion.text = '',
-                    horaReparacion.text = '',
-                    concentracionFuga.text = '',
-                    faltaComponentes.text = '',
-                    fechaCompraNuevoComponente.text = '',
-                    fechaReparacionNuevoComponente.text = '',
-                    concentracionMetano.text = '',
-                    foto.text = '',
-                    fotoTermodinamica.text = '',
-                    hayfugas.setFuga = '',
-                    fueReperado.setReparado = '',
-                    Navigator.pushNamed(context, 'home'),
+                    );
+                    equipoComponente.text = '';
+                    fechaInicioInspeccion.text = '';
+                    horaInicioInspeccion.text = '';
+                    fechafinalizacionInspeccion.text = '';
+                    horafinalizacionInspeccion.text = '';
+                    temperatura.text = '';
+                    corrienteAireKMH.text = '';
+                    fuga.text = '';
+                    concentracion.text = '';
+                    reparado.text = '';
+                    fechaReparacion.text = '';
+                    horaReparacion.text = '';
+                    concentracionFuga.text = '';
+                    faltaComponentes.text = '';
+                    fechaCompraNuevoComponente.text = '';
+                    fechaReparacionNuevoComponente.text = '';
+                    concentracionMetano.text = '';
+                    foto.text = '';
+                    fotoTermodinamica.text = '';
+                    hayfugas.setFuga = '';
+                    fueReperado.setReparado = '';
+                    Navigator.pushNamed(context, 'home');
                   },
                   child: const Text('Guardar'),
                 ),
@@ -347,11 +501,9 @@ class CampoCheckBoxAlert extends StatelessWidget {
       required this.reparado,
       required this.fechaReparacion,
       required this.horaReparacion,
-      required this.concentracionFuga, 
-      required this.foto, 
-      required this.fotoTermodinamica
-      }
-      );
+      required this.concentracionFuga,
+      required this.foto,
+      required this.fotoTermodinamica});
 
   final TextEditingController fuga;
   final TextEditingController concentracion;
@@ -366,7 +518,7 @@ class CampoCheckBoxAlert extends StatelessWidget {
   // REPARADO NO
   final TextEditingController foto;
   final TextEditingController fotoTermodinamica;
-  
+
   @override
   Widget build(BuildContext context) {
     return Padding(

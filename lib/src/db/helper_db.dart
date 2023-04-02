@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
@@ -31,9 +32,9 @@ class DatabaseProvider {
 
   static _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $installTABLENAME (instalacionID INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, inspector TEXT, instrumento TEXT, lugar TEXT, ubicacion TEXT)");
+        "CREATE TABLE $installTABLENAME (instalacionID INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, inspector TEXT, instrumento TEXT, lugar TEXT, ubicacion TEXT, timestamp INTEGER)");
 
     await db.execute(
-        "CREATE TABLE $inspectTABLENAME (inspeccionID INTEGER PRIMARY KEY AUTOINCREMENT, equipoComponente TEXT, fechaInicioInspeccion TEXT, horaInicioInspeccion TEXT, fechafinalizacionInspeccion TEXT, horafinalizacionInspeccion TEXT, temperatura TEXT, corrienteAireKMH TEXT, fuga TEXT, concentracion TEXT, reparado TEXT, fechaReparacion TEXT, horaReparacion TEXT, concentracionFuga TEXT, faltaComponentes TEXT, fechaCompraNuevoComponente TEXT, fechaReparacionNuevoComponente TEXT, concentracionMetano TEXT, foto TEXT, fotoTermografica TEXT)");
+        "CREATE TABLE $inspectTABLENAME (inspeccionID INTEGER PRIMARY KEY AUTOINCREMENT, equipoComponente TEXT, fechaInicioInspeccion TEXT, horaInicioInspeccion TEXT, fechafinalizacionInspeccion TEXT, horafinalizacionInspeccion TEXT, temperatura TEXT, corrienteAireKMH TEXT, fuga TEXT, concentracion TEXT, reparado TEXT, fechaReparacion TEXT, horaReparacion TEXT, concentracionFuga TEXT, faltaComponentes TEXT, fechaCompraNuevoComponente TEXT, fechaReparacionNuevoComponente TEXT, concentracionMetano TEXT, foto TEXT, fotoTermografica TEXT, timestamp INTEGER)");
   }
 }

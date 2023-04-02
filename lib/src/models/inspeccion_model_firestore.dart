@@ -1,4 +1,4 @@
-class Inspeccion {
+class InspeccionFirestore {
   //final int inspeccionID;
 
   // INSPECCIÓN (REQUERIDO)
@@ -35,7 +35,7 @@ class Inspeccion {
 
   final int timestamp;
 
-  Inspeccion(
+  InspeccionFirestore(
       //this.inspeccionID,
       this.fuga,
       this.concentracion,

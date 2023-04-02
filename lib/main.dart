@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 // IMPORTACIONES DE FIREBASE
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -12,6 +13,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseDatabase.instance.setPersistenceEnabled(true);
   runApp(const MyApp());
 }
 
@@ -32,7 +34,8 @@ class MyApp extends StatelessWidget {
         routes: {
           'home': (_) => const HomeScreen(),
           'formInstalacion': (_) => FormularioInstalacionScreen(),
-          'formInspeccion': (_) => const FormularioInspeccionScreen()
+          'formInspeccion': (_) => const FormularioInspeccionScreen(),
+          'InpeccionInfo': (_) => const InspeccionInfo()
         },
       ),
     );

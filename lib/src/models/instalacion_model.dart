@@ -5,15 +5,17 @@ class Instalacion {
   final String instrumento;
   final String lugar;
   final String ubicacion;
+  final int timestamp;
 
-  Instalacion({
-    //required this.instalacionID,
-    required this.nombre,
-    required this.inspector,
-    required this.instrumento,
-    required this.lugar,
-    required this.ubicacion,
-  });
+  Instalacion(
+      {
+      //required this.instalacionID,
+      required this.nombre,
+      required this.inspector,
+      required this.instrumento,
+      required this.lugar,
+      required this.ubicacion,
+      required this.timestamp});
   Map<String, dynamic> toMap() {
     return {
       //'instalacionID': instalacionID,
@@ -21,7 +23,8 @@ class Instalacion {
       'inspector': inspector,
       'instrumento': instrumento,
       'lugar': lugar,
-      'ubicacion': ubicacion
+      'ubicacion': ubicacion,
+      'timestamp': timestamp
     };
   }
 }

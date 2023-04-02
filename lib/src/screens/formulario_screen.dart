@@ -3,6 +3,7 @@ import 'package:install_inspect/src/db/insertar_instalacion.dart';
 import 'package:install_inspect/src/models/instalacion_model.dart';
 import 'package:install_inspect/src/services/firebase_services.dart';
 
+// ignore: must_be_immutable
 class FormularioInstalacionScreen extends StatelessWidget {
   FormularioInstalacionScreen({super.key});
   int id = 0;
@@ -65,18 +66,26 @@ class FormularioInstalacionScreen extends StatelessWidget {
                 height: 50,
               ),
               ElevatedButton(
-                onPressed: () =>  {
+                onPressed: () => {
                   if (_formKey.currentState!.validate())
                     {
                       salidaEstandar(nombre, inspector, instrumento, lugar),
                       InsertarInstalacion().agregarInstalacion(Instalacion(
-                          //instalacionID: id += 1,
                           nombre: nombre.text,
                           inspector: inspector.text,
                           instrumento: instrumento.text,
                           lugar: lugar.text,
-                          ubicacion: ubicacion.text)),
-                      agregarInstalacion(nombre.text, inspector.text, instrumento.text, lugar.text,ubicacion.text),
+                          ubicacion: ubicacion.text,
+                          timestamp:
+                              DateTime.now().millisecondsSinceEpoch ~/ 1000)),
+                      agregarInstalacion(Instalacion(
+                          nombre: nombre.text,
+                          inspector: inspector.text,
+                          instrumento: instrumento.text,
+                          lugar: lugar.text,
+                          ubicacion: ubicacion.text,
+                          timestamp:
+                              DateTime.now().millisecondsSinceEpoch ~/ 1000)),
                       nombre.text = '',
                       inspector.text = '',
                       instrumento.text = '',
@@ -84,11 +93,6 @@ class FormularioInstalacionScreen extends StatelessWidget {
                       ubicacion.text = '',
                       Navigator.pushNamed(context, 'formInspeccion')
                     }
-                  else
-                    {
-                      print(
-                          'no se puede agregar la nota porque los campos deben ser obligatorios')
-                    },
                 },
                 child: const Text('Guardar'),
               )
@@ -134,7 +138,6 @@ class InputDato extends StatelessWidget {
             if (value!.isEmpty) {
               return 'Por favor ingrese $hinText';
             }
-            print('estoy en el validador');
             return null;
           },
           decoration: InputDecoration(

@@ -14,13 +14,13 @@ class QueryInstalaciones with ChangeNotifier {
       maps.length,
       (i) {
         return Instalacion(
-          //instalacionID: maps[i]['instalacionID'],
-          nombre: maps[i]['nombre'],
-          inspector: maps[i]['inspector'],
-          instrumento: maps[i]['instrumento'],
-          lugar: maps[i]['lugar'],
-          ubicacion: maps[i]['ubicacion'],
-        );
+            //instalacionID: maps[i]['instalacionID'],
+            nombre: maps[i]['nombre'],
+            inspector: maps[i]['inspector'],
+            instrumento: maps[i]['instrumento'],
+            lugar: maps[i]['lugar'],
+            ubicacion: maps[i]['ubicacion'],
+            timestamp: maps[i]['timestamp']);
       },
     );
     notifyListeners();

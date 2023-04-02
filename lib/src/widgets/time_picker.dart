@@ -57,8 +57,13 @@ class _CampoTimePickerState extends State<CampoTimePicker> {
     String hora;
     return showTimePicker(context: context, initialTime: TimeOfDay.now())
         .then((value) => setState(() {
+              print('el valor es del time $value');
               hora = value.toString();
-              widget.controlador.text = hora.substring(10, 15);
+              if ((value == null)) {
+                widget.controlador.text = '';
+              } else {
+                widget.controlador.text = hora.substring(10, 15);
+              }
             }));
   }
 }

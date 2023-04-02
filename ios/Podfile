@@ -1,0 +1,19 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'install_inspect' do
+    # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+    use_frameworks!
+  
+    # Add the Firebase pod for Authentication
+    pod 'Firebase/Auth'
+  
+    # Add the Firebase pod for Cloud Firestore
+    pod 'Firebase/Firestore'
+  
+    # Add the Firebase pod for Storage
+    pod 'Firebase/Storage'
+  
+    # Add any other desired Firebase pods here
+  
+  end

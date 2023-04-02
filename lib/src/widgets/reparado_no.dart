@@ -1,4 +1,7 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:install_inspect/src/widgets/image_picker.dart';
 import 'package:install_inspect/src/widgets/widgets.dart';
 import 'dart:convert';
@@ -11,8 +14,7 @@ class ReparadoNo extends StatefulWidget {
       required this.fechaReparacionNuevoComponente,
       required this.concentracionMetano,
       required this.foto,
-      required this.fotoTermodinamica
-      });
+      required this.fotoTermodinamica});
 
   final TextEditingController faltaComponentes;
   final TextEditingController fechaCompraNuevoComponente;
@@ -44,51 +46,17 @@ class _ReparadoNoState extends State<ReparadoNo> {
         CampoTexto(
             textoController: widget.concentracionMetano,
             hinText: 'Concentración de Metano'),
-
-        SizedBox(
-                width: size.width * 0.85,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                    onPressed: () async {
-                      widget.foto.text = await cargarFoto();
-                      setState(() {
-                      },);
-                    },
-                    child: const Text('Subir Fotografía')),
-              ),
-          widget.foto.text != 'null' && widget.foto.text != '' ?
-          SizedBox(
-            width: 200,
-            height: 100,
-            child:  (widget.foto.text != 'null' && widget.foto.text != '') ? Image.memory(base64Decode(widget.foto.text)) : const Text(''),
-          ):
-          const SizedBox(),
-          SizedBox(
-          width: size.width * 0.85,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              onPressed: () async {
-                widget.fotoTermodinamica.text = await cargarFotoTermografica();
-                setState(() {
-                },);
-              },
-              child: const Text('Subir Fotografía Termodinámica')),
-        ),
-        widget.fotoTermodinamica.text != 'null' && widget.fotoTermodinamica.text != '' ?
-          SizedBox(
-            width: 200,
-            height: 100,
-            child:  (widget.fotoTermodinamica.text != 'null' && widget.fotoTermodinamica.text != '') ? Image.memory(base64Decode(widget.fotoTermodinamica.text)) : const Text(''),
-          ):
-          const SizedBox(),
+        widget.fotoTermodinamica.text != 'null' &&
+                widget.fotoTermodinamica.text != ''
+            ? SizedBox(
+                width: 200,
+                height: 100,
+                child: (widget.fotoTermodinamica.text != 'null' &&
+                        widget.fotoTermodinamica.text != '')
+                    ? Image.memory(base64Decode(widget.fotoTermodinamica.text))
+                    : const Text(''),
+              )
+            : const SizedBox(),
       ],
     );
   }
