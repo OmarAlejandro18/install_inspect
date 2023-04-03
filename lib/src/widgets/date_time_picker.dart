@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CampoFecha extends StatefulWidget {
   final TextEditingController controlador;
@@ -11,6 +12,9 @@ class CampoFecha extends StatefulWidget {
 }
 
 class _CampoFechaState extends State<CampoFecha> {
+
+DateTime? fechaFormat;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -64,7 +68,8 @@ class _CampoFechaState extends State<CampoFecha> {
     String fecha;
     if (picked != null) {
       setState(() {
-        fecha = picked.toString();
+        fechaFormat = picked;
+        fecha = DateFormat('dd/MM/yyyy').format(fechaFormat!).toString();
         widget.controlador.text = fecha.substring(0, 10);
       });
     }

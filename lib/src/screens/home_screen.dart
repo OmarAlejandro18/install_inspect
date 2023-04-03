@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import '../services/firebase_services.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,14 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Datos Instalacion-Inspeccion'),
+          child: Text('Datos Instalación-Inspección'),
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('instalacion')
-            .orderBy('timestamp')
-            .snapshots(),
+        stream: getDataInstalacionFirestore(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(child: Text('Error al cargar los datos'));
@@ -43,16 +41,43 @@ class _HomeScreenState extends State<HomeScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data() as Map<String, dynamic>;
-              return ListTile(
-                title: Text(data['nombre']),
-                subtitle: Text(data['inspector']),
+          return ListView.builder(
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, i) {
+            return Card(
+                elevation: 1,
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10)
+                  ),
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(child:Text('Instalación N° $i', style: const TextStyle(
+                          fontWeight: FontWeight.bold
+                        ),)),
+                        const SizedBox(height: 10,),
+                        Text('Nombre:   ${snapshot.data!.docs[i]['nombre']}'),
+                        const SizedBox(height: 5),
+                        Text('Inspector:   ${snapshot.data!.docs[i]['inspector']}'),
+                        const SizedBox(height: 5),
+                        Text('Instrumento:   ${snapshot.data!.docs[i]['instrumento']}'),
+                        const SizedBox(height: 5),
+                        Text('Lugar:   ${snapshot.data!.docs[i]['lugar']}'),
+                        const SizedBox(height: 5),
+                        Text('Ubicación:   ${snapshot.data!.docs[i]['ubicacion']}')
+                      ],
+                    ),
+                  ),
+                ),
               );
-            }).toList(),
-          );
+          },
+        );
+          
         },
       ),
       floatingActionButton: FloatingActionButton(

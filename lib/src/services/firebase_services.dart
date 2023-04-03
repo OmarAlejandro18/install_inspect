@@ -4,6 +4,27 @@ import 'package:install_inspect/src/models/instalacion_model.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
+Stream<QuerySnapshot> getDataInstalacionFirestore() {
+  return db
+  .collection('instalacion')
+  .orderBy('timestamp')
+  .snapshots();
+}
+
+
+Future<DocumentSnapshot> getFirestoreData() async {
+  DocumentSnapshot snapshot = await db.collection('tu_coleccion').doc('tu_documento').get();
+  return snapshot;
+}
+
+Stream<QuerySnapshot> getDataInspeccionFirestore() {
+  return db
+  .collection('inspeccion')
+  .orderBy('timestamp')
+  .snapshots();
+}
+
+
 Future<List> getInstalacion() async {
   List instalacion = [];
   CollectionReference collectionReferenceInstalacion =
@@ -23,3 +44,5 @@ Future<void> agregarInstalacion(Instalacion instalacion) async {
 Future<void> agregarInspeccion(Inspeccion inspeccion) async {
   await db.collection('inspeccion').add(inspeccion.toMap());
 }
+
+

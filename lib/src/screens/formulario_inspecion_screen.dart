@@ -236,10 +236,10 @@ class _FormularioInspeccionScreenState
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async{
                     if (foto.text != '' && fotoTermodinamica.text != '') {
-                      subirFotoFireStorage(File(foto.text));
-                      subirfotoTermograficaFireStorage(
+                      foto.text = await subirFotoFireStorage(File(foto.text));
+                      fotoTermodinamica.text = await subirfotoTermograficaFireStorage(
                           File(fotoTermodinamica.text));
                     }
                     InsertarInspeccion().agregarInspeccion(Inspeccion(
