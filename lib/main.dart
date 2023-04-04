@@ -35,7 +35,8 @@ class MyApp extends StatelessWidget {
           'home': (_) => const HomeScreen(),
           'formInstalacion': (_) => FormularioInstalacionScreen(),
           'formInspeccion': (_) => const FormularioInspeccionScreen(),
-          'InpeccionInfo': (_) => const InspeccionInfo()
+          'InpeccionInfo': (_) => const InspeccionInfo(),
+          'clienteScreen': (_) => ClienteScreen(),
         },
       ),
     );

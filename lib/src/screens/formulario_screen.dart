@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/insertar_instalacion.dart';
 import 'package:install_inspect/src/models/instalacion_model.dart';
 import 'package:install_inspect/src/services/firebase_services.dart';
+import 'package:install_inspect/src/widgets/widgets.dart';
 
 // ignore: must_be_immutable
 class FormularioInstalacionScreen extends StatelessWidget {
   FormularioInstalacionScreen({super.key});
-  int id = 0;
   final _formKey = GlobalKey<FormState>();
-  final nombre = TextEditingController();
-  final inspector = TextEditingController();
-  final instrumento = TextEditingController();
-  final lugar = TextEditingController();
+  final nombreInstalacion = TextEditingController();
   final ubicacion = TextEditingController();
+  final tipoComponente = TextEditingController();
+  final equipoCritico = TextEditingController();
+  final inspeccionTecnica = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -33,28 +33,9 @@ class FormularioInstalacionScreen extends StatelessWidget {
               const SizedBox(
                 height: 50,
               ),
-              InputDato(controlador: nombre, hinText: 'Nombre componente'),
-              const SizedBox(
-                height: 15,
-              ),
               InputDato(
-                controlador: inspector,
-                hinText: 'Inspector',
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              InputDato(
-                controlador: instrumento,
-                hinText: 'Instrumento',
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              InputDato(
-                controlador: lugar,
-                hinText: 'Lugar',
-              ),
+                  controlador: nombreInstalacion,
+                  hinText: 'Nombre de la Instalación'),
               const SizedBox(
                 height: 15,
               ),
@@ -63,39 +44,63 @@ class FormularioInstalacionScreen extends StatelessWidget {
                 hinText: 'Ubicación',
               ),
               const SizedBox(
+                height: 15,
+              ),
+              InputDato(
+                controlador: tipoComponente,
+                hinText: 'Tipo de Equipo Componente',
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              AlertaInstalacion(
+                valorCampo: equipoCritico,
+                hinText: 'Equipo Critico',
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              AlertaInstalacion(
+                valorCampo: inspeccionTecnica,
+                hinText: 'inspección Tecnica del riesgo',
+              ),
+              const SizedBox(
                 height: 50,
               ),
               ElevatedButton(
                 onPressed: () => {
                   if (_formKey.currentState!.validate())
                     {
-                      salidaEstandar(nombre, inspector, instrumento, lugar),
-                      InsertarInstalacion().agregarInstalacion(Instalacion(
-                          nombre: nombre.text,
-                          inspector: inspector.text,
-                          instrumento: instrumento.text,
-                          lugar: lugar.text,
-                          ubicacion: ubicacion.text,
-                          timestamp:
-                              DateTime.now().millisecondsSinceEpoch ~/ 1000)),
+                      salidaEstandar(nombreInstalacion, ubicacion,
+                          tipoComponente, equipoCritico, inspeccionTecnica),
+                      // InsertarInstalacion().agregarInstalacion(Instalacion(
+                      //     nombreInstalacion: nombreInstalacion.text,
+                      //     ubicacion: ubicacion.text,
+                      //     tipoComponente: tipoComponente.text,
+                      //     equipoCritico: equipoCritico.text,
+                      //     inspeccionTecnica: inspeccionTecnica.text,
+                      //     completed: false,
+                      //     timestamp:
+                      //         DateTime.now().millisecondsSinceEpoch ~/ 1000)),
                       agregarInstalacion(Instalacion(
-                          nombre: nombre.text,
-                          inspector: inspector.text,
-                          instrumento: instrumento.text,
-                          lugar: lugar.text,
+                          nombreInstalacion: nombreInstalacion.text,
                           ubicacion: ubicacion.text,
+                          tipoComponente: tipoComponente.text,
+                          equipoCritico: equipoCritico.text,
+                          inspeccionTecnica: inspeccionTecnica.text,
+                          completed: false,
                           timestamp:
                               DateTime.now().millisecondsSinceEpoch ~/ 1000)),
-                      nombre.text = '',
-                      inspector.text = '',
-                      instrumento.text = '',
-                      lugar.text = '',
+                      nombreInstalacion.text = '',
                       ubicacion.text = '',
+                      tipoComponente.text = '',
+                      equipoCritico.text = '',
+                      inspeccionTecnica.text = '',
                       Navigator.pushNamed(context, 'formInspeccion')
                     }
                 },
                 child: const Text('Guardar'),
-              )
+              ),
             ],
           ),
         ),
@@ -156,10 +161,15 @@ class InputDato extends StatelessWidget {
   }
 }
 
-salidaEstandar(TextEditingController nombre, TextEditingController inspector,
-    TextEditingController instrumento, TextEditingController lugar) {
-  print("nombre es ${nombre.text}");
-  print("inspector es ${inspector.text}");
-  print("instrumento es ${instrumento.text}");
-  print("lugar es ${lugar.text}");
+salidaEstandar(
+    TextEditingController nombreInstalacion,
+    TextEditingController ubicacion,
+    TextEditingController tipoComponente,
+    TextEditingController equipoCritico,
+    TextEditingController inspeccionTecnica) {
+  print('nombre es ${nombreInstalacion.text}');
+  print('ubicacion es ${ubicacion.text}');
+  print("tipoComponente es ${tipoComponente.text}");
+  print("equipoCritico es ${equipoCritico.text}");
+  print('inspeccionTecnica ${inspeccionTecnica.text}');
 }

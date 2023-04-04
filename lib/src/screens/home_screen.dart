@@ -42,46 +42,54 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           return ListView.builder(
-          itemCount: snapshot.data!.docs.length,
-          itemBuilder: (context, i) {
-            return Card(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, i) {
+              return Card(
                 elevation: 1,
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10)
-                  ),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(10)),
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(child:Text('Instalación N° $i', style: const TextStyle(
-                          fontWeight: FontWeight.bold
-                        ),)),
-                        const SizedBox(height: 10,),
-                        Text('Nombre:   ${snapshot.data!.docs[i]['nombre']}'),
+                        Center(
+                            child: Text(
+                          'Instalación N° $i',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        )),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                            'Nombre de instalación:   ${snapshot.data!.docs[i]['nombreInstalacion']}'),
                         const SizedBox(height: 5),
-                        Text('Inspector:   ${snapshot.data!.docs[i]['inspector']}'),
+                        Text(
+                            'Ubicación:   ${snapshot.data!.docs[i]['ubicacion']}'),
                         const SizedBox(height: 5),
-                        Text('Instrumento:   ${snapshot.data!.docs[i]['instrumento']}'),
+                        Text(
+                            'Tipo de equipo componente:   ${snapshot.data!.docs[i]['tipoComponente']}'),
                         const SizedBox(height: 5),
-                        Text('Lugar:   ${snapshot.data!.docs[i]['lugar']}'),
+                        Text(
+                            'Equipo Critico:   ${snapshot.data!.docs[i]['equipoCritico']}'),
                         const SizedBox(height: 5),
-                        Text('Ubicación:   ${snapshot.data!.docs[i]['ubicacion']}')
+                        Text(
+                            'Inspección tecnica del riesgo:   ${snapshot.data!.docs[i]['inspeccionTecnica']}')
                       ],
                     ),
                   ),
                 ),
               );
-          },
-        );
-          
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, 'formInstalacion'),
+        onPressed: () => Navigator.pushNamed(context, 'clienteScreen'),
         child: const Icon(Icons.add),
       ),
     );

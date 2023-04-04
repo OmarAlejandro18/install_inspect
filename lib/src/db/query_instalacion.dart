@@ -15,11 +15,12 @@ class QueryInstalaciones with ChangeNotifier {
       (i) {
         return Instalacion(
             //instalacionID: maps[i]['instalacionID'],
-            nombre: maps[i]['nombre'],
-            inspector: maps[i]['inspector'],
-            instrumento: maps[i]['instrumento'],
-            lugar: maps[i]['lugar'],
+            nombreInstalacion: maps[i]['nombreInstalacion'],
             ubicacion: maps[i]['ubicacion'],
+            tipoComponente: maps[i]['tipoComponente'],
+            equipoCritico: maps[i]['equipoCritico'],
+            inspeccionTecnica: maps[i]['inspeccionTecnica'],
+            completed: maps[i]['completed'],
             timestamp: maps[i]['timestamp']);
       },
     );
