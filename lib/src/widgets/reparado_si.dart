@@ -6,11 +6,17 @@ class ReparadoSi extends StatelessWidget {
       {super.key,
       required this.fechaReparacion,
       required this.horaReparacion,
-      required this.concentracionFuga});
+      required this.fechaComprobacionReparacion,
+      required this.horaComprobacionReparacion, 
+      required this.concentracionPosteriorReparacion
+      }
+      );
 
   final TextEditingController fechaReparacion;
   final TextEditingController horaReparacion;
-  final TextEditingController concentracionFuga;
+  final TextEditingController fechaComprobacionReparacion;
+  final TextEditingController horaComprobacionReparacion;
+  final TextEditingController concentracionPosteriorReparacion;
 
   @override
   Widget build(BuildContext context) {
@@ -19,29 +25,43 @@ class ReparadoSi extends StatelessWidget {
         CampoFecha(
             controlador: fechaReparacion, hinText: 'Fecha de reparación'),
         const SizedBox(
-          height: 10,
+          height: 15,
         ),
-        CampoTimePicker(
+        CampoHora(
           controlador: horaReparacion,
           hinText: 'Hora de reparación',
         ),
         const SizedBox(
-          height: 10,
+          height: 15,
         ),
-        ConcentracionFuga(
-            concentracionFuga: concentracionFuga,
-            hinText: 'Concentración Fuga'),
+        CampoFecha(
+            controlador: fechaComprobacionReparacion, hinText: 'Fecha de comprobación reparación'),
+        const SizedBox(
+          height: 15,
+        ),
+        CampoHora(
+          controlador: horaComprobacionReparacion,
+          hinText: 'Hora de comprobación reparación',
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        ConcentracionPosteriorRepracion(
+          concentracionPosteriorReparacion:concentracionPosteriorReparacion, 
+          hinText: 'Concentración posterior reparación',),
+          const SizedBox(height: 15,),
       ],
+      
     );
   }
 }
 
-class ConcentracionFuga extends StatelessWidget {
-  final TextEditingController concentracionFuga;
+class ConcentracionPosteriorRepracion extends StatelessWidget {
+  final TextEditingController concentracionPosteriorReparacion;
   final String hinText;
 
-  const ConcentracionFuga(
-      {super.key, required this.concentracionFuga, required this.hinText});
+  const ConcentracionPosteriorRepracion(
+      {super.key, required this.concentracionPosteriorReparacion, required this.hinText});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +82,7 @@ class ConcentracionFuga extends StatelessWidget {
         ),
         height: 60,
         child: TextFormField(
-          controller: concentracionFuga,
+          controller: concentracionPosteriorReparacion,
           style: const TextStyle(
             color: Colors.black87,
           ),

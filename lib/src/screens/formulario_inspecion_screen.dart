@@ -96,7 +96,7 @@ class _FormularioInspeccionScreenState
               const SizedBox(
                 height: 15,
               ),
-              CampoTimePicker(
+              CampoHora(
                 controlador: horaInicioInspeccion,
                 hinText: 'Hora de Inicio de la Inspección',
               ),
@@ -111,7 +111,7 @@ class _FormularioInspeccionScreenState
               const SizedBox(
                 height: 15,
               ),
-              CampoTimePicker(
+              CampoHora(
                 controlador: horafinalizacionInspeccion,
                 hinText: 'Hora de finalización de la Inspección',
               ),
@@ -146,22 +146,22 @@ class _FormularioInspeccionScreenState
               const SizedBox(
                 height: 15,
               ),
-              hayfugas.getFuga == 'Si'
-                  ? FugaSI(
-                      concentracion: concentracion,
-                      reparado: reparado,
-                      fechaReparacion: fechaReparacion,
-                      horaReparacion: horaReparacion,
-                      concentracionFuga: concentracionFuga,
-                      faltaComponentes: faltaComponentes,
-                      fechaCompraNuevoComponente: fechaCompraNuevoComponente,
-                      fechaReparacionNuevoComponente:
-                          fechaReparacionNuevoComponente,
-                      concentracionMetano: concentracionMetano,
-                      foto: foto,
-                      fotoTermodinamica: fotoTermodinamica,
-                    )
-                  : Container(),
+              // hayfugas.getFuga == 'Si'
+              //     ? FugaSI(
+              //         concentracion: concentracion,
+              //         reparado: reparado,
+              //         fechaReparacion: fechaReparacion,
+              //         horaReparacion: horaReparacion,
+              //         concentracionFuga: concentracionFuga,
+              //         faltaComponentes: faltaComponentes,
+              //         fechaCompraNuevoComponente: fechaCompraNuevoComponente,
+              //         fechaReparacionNuevoComponente:
+              //             fechaReparacionNuevoComponente,
+              //         concentracionMetano: concentracionMetano,
+              //         foto: foto,
+              //         fotoTermodinamica: fotoTermodinamica,
+              //       )
+              //     : Container(),
               const SizedBox(
                 height: 5,
               ),
@@ -237,12 +237,12 @@ class _FormularioInspeccionScreenState
                     ),
                   ),
                   onPressed: () async {
-                    if (foto.text != '' && fotoTermodinamica.text != '') {
-                      foto.text = await subirFotoFireStorage(File(foto.text));
-                      fotoTermodinamica.text =
-                          await subirfotoTermograficaFireStorage(
-                              File(fotoTermodinamica.text));
-                    }
+                    // if (foto.text != '' && fotoTermodinamica.text != '') {
+                    //   foto.text = await subirFotoFireStorage(File(foto.text));
+                    //   fotoTermodinamica.text =
+                    //       await subirfotoTermograficaFireStorage(
+                    //           File(fotoTermodinamica.text));
+                    // }
                     // InsertarInspeccion().agregarInspeccion(Inspeccion(
                     //   fuga.text,
                     //   concentracion.text != '' ? concentracion.text : 'null',

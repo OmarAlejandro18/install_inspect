@@ -47,6 +47,10 @@ class AnexoCinco {
 
   final int timestamp;
 
+  // FORANEA
+  final int clienteID;
+
+
   AnexoCinco({
     //INSTALACION
     required this.nombreInstalacion,
@@ -95,6 +99,9 @@ class AnexoCinco {
 
     // TIEMPO
     required this.timestamp,
+
+    // CLIENTE ID
+    required this.clienteID,
   });
   Map<String, dynamic> toMap() {
     return {
@@ -144,7 +151,10 @@ class AnexoCinco {
       'imagenInfrarroja': imagenInfrarroja,
 
       // TIEMPO
-      'timestamp': timestamp
+      'timestamp': timestamp,
+
+      // CLIENTE
+      'clienteID' : clienteID 
     };
   }
 }

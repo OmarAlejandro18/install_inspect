@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class CampoTimePicker extends StatefulWidget {
+class CampoHora extends StatefulWidget {
   final TextEditingController controlador;
   final String hinText;
 
-  const CampoTimePicker(
+  const CampoHora(
       {super.key, required this.controlador, required this.hinText});
   @override
-  State<CampoTimePicker> createState() => _CampoTimePickerState();
+  State<CampoHora> createState() => _CampoHoraState();
 }
 
-class _CampoTimePickerState extends State<CampoTimePicker> {
+class _CampoHoraState extends State<CampoHora> {
   @override
   Widget build(BuildContext context) {
     return Padding(

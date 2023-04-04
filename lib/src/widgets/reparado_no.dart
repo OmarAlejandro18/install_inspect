@@ -1,27 +1,21 @@
-import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:install_inspect/src/widgets/image_picker.dart';
 import 'package:install_inspect/src/widgets/widgets.dart';
-import 'dart:convert';
 
 class ReparadoNo extends StatefulWidget {
   const ReparadoNo(
       {super.key,
-      required this.faltaComponentes,
-      required this.fechaCompraNuevoComponente,
-      required this.fechaReparacionNuevoComponente,
-      required this.concentracionMetano,
-      required this.foto,
-      required this.fotoTermodinamica});
+      required this.noReparadofaltaComponentes,
+      required this.fechaRemisionComponente,
+      required this.fechaReperacionComponente,
+      required this.fechaRemplazoEquipo,
+      required this.volumenMetano,});
 
-  final TextEditingController faltaComponentes;
-  final TextEditingController fechaCompraNuevoComponente;
-  final TextEditingController fechaReparacionNuevoComponente;
-  final TextEditingController concentracionMetano;
-  final TextEditingController foto;
-  final TextEditingController fotoTermodinamica;
+  // NO REPARADO
+  final TextEditingController noReparadofaltaComponentes;
+  final TextEditingController fechaRemisionComponente;
+  final TextEditingController fechaReperacionComponente;
+  final TextEditingController fechaRemplazoEquipo;
+  final TextEditingController volumenMetano;
 
   @override
   State<ReparadoNo> createState() => _ReparadoNoState();
@@ -30,33 +24,26 @@ class ReparadoNo extends StatefulWidget {
 class _ReparadoNoState extends State<ReparadoNo> {
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Column(
       children: [
-        CampoTexto(
-          textoController: widget.faltaComponentes,
-          hinText: 'Reparación falta de componentes',
-        ),
+        AlertaNoReparadoFaltaComponentes(valorCampo: widget.noReparadofaltaComponentes, hinText: 'No Reparado por falta de componentes', ),
+        const SizedBox(height: 15,),
         CampoFecha(
-            controlador: widget.fechaCompraNuevoComponente,
-            hinText: 'Fecha de compra nuevo componente'),
+            controlador: widget.fechaRemisionComponente,
+            hinText: 'Fecha de remisión componente'),
+        const SizedBox(height: 15,),
         CampoFecha(
-            controlador: widget.fechaReparacionNuevoComponente,
-            hinText: 'Fecha de reparacion usando nuevo componente'),
+            controlador: widget.fechaReperacionComponente,
+            hinText: 'Fecha de reparación componente'),
+        const SizedBox(height: 15,),
+        CampoFecha(
+            controlador: widget.fechaRemplazoEquipo,
+            hinText: 'Fecha de remplazo del componente'),
+        const SizedBox(height: 15,),
         CampoTexto(
-            textoController: widget.concentracionMetano,
-            hinText: 'Concentración de Metano'),
-        widget.fotoTermodinamica.text != 'null' &&
-                widget.fotoTermodinamica.text != ''
-            ? SizedBox(
-                width: 200,
-                height: 100,
-                child: (widget.fotoTermodinamica.text != 'null' &&
-                        widget.fotoTermodinamica.text != '')
-                    ? Image.memory(base64Decode(widget.fotoTermodinamica.text))
-                    : const Text(''),
-              )
-            : const SizedBox(),
+            textoController: widget.volumenMetano,
+            hinText: 'Volumen de Metano'),
+        const SizedBox(height: 15,),
       ],
     );
   }
@@ -104,6 +91,83 @@ class CampoTexto extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class AlertaNoReparadoFaltaComponentes extends StatelessWidget {
+  const AlertaNoReparadoFaltaComponentes(
+      {super.key, required this.valorCampo, required this.hinText});
+
+  final TextEditingController valorCampo;
+  final String hinText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Container(
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(
+              offset: Offset(4, -4),
+              blurRadius: 6,
+              color: Colors.black26,
+            ),
+          ],
+        ),
+        height: 60,
+        child: TextFormField(
+          controller: valorCampo,
+          style: const TextStyle(
+            color: Colors.black87,
+          ),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.only(top: 14),
+            prefixIcon: const Icon(
+              Icons.email,
+              color: Colors.white,
+            ),
+            hintText: hinText,
+            hintStyle: const TextStyle(color: Colors.black38),
+          ),
+          onTap: () => {
+            FocusScope.of(context).requestFocus(FocusNode()),
+            mostrarAlerta(context),
+          },
+        ),
+      ),
+    );
+  }
+
+  mostrarAlerta(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(hinText),
+          actions: [
+            TextButton(
+              child: const Text("No"),
+              onPressed: () {
+                valorCampo.text = 'No';
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text("Sí"),
+              onPressed: () {
+                valorCampo.text = 'Si';
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

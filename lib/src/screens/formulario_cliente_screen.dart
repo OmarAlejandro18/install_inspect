@@ -10,6 +10,7 @@ class ClienteScreen extends StatelessWidget {
   final cliente = TextEditingController();
   final ciudad = TextEditingController();
   final trimestre = TextEditingController();
+  late final clienteID;
 
   @override
   Widget build(BuildContext context) {
@@ -47,26 +48,28 @@ class ClienteScreen extends StatelessWidget {
               height: 15,
             ),
             ElevatedButton(
-              onPressed: () => {
+              onPressed: () async {
                 if (_formKey.currentState!.validate())
                   {
-                    InsertarCliente().agregarCliente(Cliente(
+                    clienteID = await InsertarCliente().agregarCliente(Cliente(
                         cliente: cliente.text,
                         ciudad: ciudad.text,
                         trimestre: trimestre.text,
                         timestamp:
-                            DateTime.now().millisecondsSinceEpoch ~/ 1000)),
-                    agregarClienteFirestore(Cliente(
-                        cliente: cliente.text,
-                        ciudad: ciudad.text,
-                        trimestre: trimestre.text,
-                        timestamp:
-                            DateTime.now().millisecondsSinceEpoch ~/ 1000)),
-                    cliente.text = '',
-                    ciudad.text = '',
-                    trimestre.text = '',
-                    Navigator.pop(context)
-                    //Navigator.pushNamed(context, 'formInspeccion')
+                            DateTime.now().millisecondsSinceEpoch ~/ 1000)
+                            );
+                    
+                    // agregarClienteFirestore(Cliente(
+                    //     cliente: cliente.text,
+                    //     ciudad: ciudad.text,
+                    //     trimestre: trimestre.text,
+                    //     timestamp:
+                    //         DateTime.now().millisecondsSinceEpoch ~/ 1000)),
+                    cliente.text = '';
+                    ciudad.text = '';
+                    trimestre.text = '';
+
+                    Navigator.pushNamed(context, 'formAnexoCinco', arguments: clienteID);
                   }
               },
               child: const Text('Guardar Cliente'),
