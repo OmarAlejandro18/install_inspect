@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.cloud),
             onPressed: () async {
               // Aquí puedes colocar el código que se ejecutará cuando se presione el botón
               print('Botón de subir a la nube');
@@ -72,26 +72,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Center(
                             child: Text(
-                          'Instalación N° $i',
+                          'Cliente N° ${i + 1}',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         )),
                         const SizedBox(
                           height: 10,
                         ),
                         Text(
-                            'Nombre de instalación:   ${snapshot.data!.docs[i]['nombreInstalacion']}'),
+                            'Nombre del cliente: ${snapshot.data!.docs[i]['cliente']}'),
+                        const SizedBox(height: 5),
+                        Text('Ciudad:   ${snapshot.data!.docs[i]['ciudad']}'),
                         const SizedBox(height: 5),
                         Text(
-                            'Ubicación:   ${snapshot.data!.docs[i]['ubicacion']}'),
+                            'Trimestre:   ${snapshot.data!.docs[i]['trimestre']}'),
                         const SizedBox(height: 5),
                         Text(
-                            'Tipo de equipo componente:   ${snapshot.data!.docs[i]['tipoComponente']}'),
+                            'Timestamp:   ${snapshot.data!.docs[i]['timestamp']}'),
                         const SizedBox(height: 5),
-                        Text(
-                            'Equipo Critico:   ${snapshot.data!.docs[i]['equipoCritico']}'),
-                        const SizedBox(height: 5),
-                        Text(
-                            'Inspección tecnica del riesgo:   ${snapshot.data!.docs[i]['inspeccionTecnica']}')
                       ],
                     ),
                   ),
