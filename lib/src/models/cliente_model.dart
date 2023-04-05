@@ -1,6 +1,6 @@
 class Cliente {
-  final String cliente;
-  final String ciudad;
+  late final String cliente;
+  late final String ciudad;
   final String trimestre;
   final int timestamp;
 
@@ -19,5 +19,14 @@ class Cliente {
       'trimestre': trimestre,
       'timestamp': timestamp
     };
+  }
+
+  factory Cliente.fromMap(Map<String, dynamic> map) {
+    return Cliente(
+      cliente: map['cliente'],
+      ciudad: map['ciudad'],
+      trimestre: map['trimestre'],
+      timestamp: map['timestamp'],
+    );
   }
 }

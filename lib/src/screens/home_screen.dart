@@ -3,7 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/helper_db.dart';
-import 'package:install_inspect/src/services/sincronizacion_datos.dart';
+import 'package:install_inspect/src/theme/app_tema.dart';
 import '../services/firebase_services.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,30 +15,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result != ConnectivityResult.none) {
         FirebaseDatabase.instance.goOnline();
       }
     });
-    obtenerDatosCliente();
-    obtenerDatosAnexo();
   }
-
-
-obtenerDatosCliente() async {
-  final clientesData = await DatabaseProvider.getDataFromTable(DatabaseProvider.clientTABLENAME);
-    print('los datos de clientes son: ${clientesData}');
-}
-  
-
-obtenerDatosAnexo() async {
-  final anexosData = await DatabaseProvider.getDataFromTable(DatabaseProvider.anexoTABLENAME);
-  print('los datos son: ${anexosData}');
-}
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -51,13 +35,13 @@ obtenerDatosAnexo() async {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () async {
-            // Aquí puedes colocar el código que se ejecutará cuando se presione el botón
-            print('Botón de subir a la nube');
-            await DatabaseProvider.sincronizarDatosCliente();
-            await DatabaseProvider.sincronizarDatosAnexo();
-      },
-    ),
-  ],
+              // Aquí puedes colocar el código que se ejecutará cuando se presione el botón
+              print('Botón de subir a la nube');
+              await DatabaseProvider.sincronizarDatosCliente();
+              await DatabaseProvider.sincronizarDatosAnexo();
+            },
+          ),
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: getDataInstalacionFirestore(),
@@ -118,6 +102,7 @@ obtenerDatosAnexo() async {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppTheme.primary,
         onPressed: () => Navigator.pushNamed(context, 'clienteScreen'),
         child: const Icon(Icons.add),
       ),

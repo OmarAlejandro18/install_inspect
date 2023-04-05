@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:install_inspect/src/db/insertar_anexo.dart';
 import 'package:install_inspect/src/models/anexocinco_model.dart';
 import 'package:install_inspect/src/providers/providers.dart';
+import 'package:install_inspect/src/theme/app_tema.dart';
 import 'package:install_inspect/src/widgets/image_picker.dart';
 import 'package:install_inspect/src/widgets/reparado_no.dart';
 import 'package:install_inspect/src/widgets/widgets.dart';
@@ -18,7 +19,6 @@ class FormularioAnexoScreen extends StatefulWidget {
 
 class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
   final _formKey = GlobalKey<FormState>();
-  
 
   final nombreInstalacion = TextEditingController();
 
@@ -102,6 +102,7 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
   @override
   Widget build(BuildContext context) {
     var clienteID = ModalRoute.of(context)!.settings.arguments;
+    int id = clienteID as int;
     final size = MediaQuery.of(context).size;
     final esReparado = Provider.of<ReparadoProvider>(context);
 
@@ -111,284 +112,405 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const SizedBox(height: 30,),
-              const Text('Datos de la Instalación', style: TextStyle(fontSize: 18),),
-              const SizedBox(height: 15,),
-              CampoInstalacion(controlador: nombreInstalacion, hinText: 'Nombre de la Instalación',),
-              const SizedBox(height: 15,),
-              CampoInstalacion(controlador: ubicacionInstalacion, hinText: 'Ubicación de la Instalación',),
-              const SizedBox(height: 15,),
-              AlertaInstalacion(valorCampo: equipoCritico, hinText: 'Equipo Critico'),
-              const SizedBox(height: 15,),
-              AlertaInstalacion(valorCampo: inspeccionTecnicaRiesgo, hinText: 'Inspección Tecnica de Riesgo'),
-              const SizedBox(height: 40,),
-              const Text('Datos de la inspección', style: TextStyle(fontSize: 18),),
-              const SizedBox(height: 15,),
-              CampoInspeccion(controlador: nombrePersonal, hinText: 'Nombre del personal',),
-              const SizedBox(height: 15,),
-              CampoFecha(controlador: fechaInicioInspeccion, hinText: 'Fecha de inicio de la inspección',),
-              const SizedBox(height: 15,),
-              CampoHora(controlador: horaInicioInspeccion, hinText: 'Hora de inicio de la inspección}',),
-              const SizedBox(height: 15,),
-              CampoFecha(controlador: fechafinalizacionInspeccion, hinText: 'Fecha final de la inspección',),
-              const SizedBox(height: 15,),
-              CampoHora(controlador: horafinalizacionInspeccion, hinText: 'Hora final de la inspección',),
-              const SizedBox(height: 15,),
-              CampoInspeccion(controlador: velocidadViento, hinText: 'Velocidad/Viento'),
-              const SizedBox(height: 15,),
-              CampoInspeccion(controlador: temperatura, hinText: 'Temperatura'),
-              const SizedBox(height: 15,),
-              CampoInspeccion(controlador: instrumentoUtilizado, hinText: 'Instrumento Utilizado'),
-              const SizedBox(height: 15,),
-              CampoFecha(controlador: fechaCalibracion, hinText: 'Fecha de la Calibración'),
-              const SizedBox(height: 15,),
-              CampoInspeccion(controlador: desviacionProcedimiento, hinText: 'Desviación procedimiento'),
-              const SizedBox(height: 15,),
-              CampoInspeccion(controlador: justificacionDesviacion, hinText: 'Justificación de la desviación'),
-              const SizedBox(height: 15,),
-              CampoInspeccion(controlador: interferenciaDeteccion, hinText: 'Interferencia detección'),
-              const SizedBox(height: 15,),
-              CampoInspeccion(controlador: concentracionPrevia, hinText: 'Concentración previa'),
-              const SizedBox(height: 40,),
-              const Text('Reparación', style: TextStyle(fontSize: 18),),
-              const SizedBox(height: 15,),
-              CampoPudoSerRapado(
-                reparado: reparado, 
-                hinText: '¿Pudo Ser Reparado?', 
-                fechaReparacion: fechaReparacion, 
-                horaReparacion: horaReparacion, 
-                fechaComprobacionReparacion : fechaComprobacionReparacion,
-                horaComprobacionReparacion: horaComprobacionReparacion,
-                concentracionPosteriorReparacion : concentracionPosteriorReparacion,
-                noReparadofaltaComponentes: noReparadofaltaComponentes,
-                fechaRemisionComponente : fechaRemisionComponente,
-                fechaReperacionComponente: fechaReperacionComponente,
-                fechaRemplazoEquipo : fechaRemplazoEquipo,
-                volumenMetano : volumenMetano
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 30,
                 ),
-            const SizedBox(height: 15,),
-            // APARECER EL OTRO FORMULARIO DE REPARADO
-            (esReparado.getReparado == '') ? const SizedBox() : const SizedBox(),
-            (esReparado.getReparado == 'Si')
-            ? ReparadoSi(
-              fechaReparacion: fechaReparacion, 
-              horaReparacion: horaReparacion, 
-              fechaComprobacionReparacion: fechaComprobacionReparacion, 
-              horaComprobacionReparacion: horaComprobacionReparacion, 
-              concentracionPosteriorReparacion: concentracionPosteriorReparacion
-              )
-            : Container(),
-            (esReparado.getReparado == 'No')
-            ? ReparadoNo(
-              noReparadofaltaComponentes: noReparadofaltaComponentes, 
-              fechaRemisionComponente: fechaRemisionComponente, 
-              fechaReperacionComponente: fechaReperacionComponente, 
-              fechaRemplazoEquipo: fechaRemplazoEquipo, 
-              volumenMetano: volumenMetano
-              )
-            : Container(),
-            const SizedBox(height: 15,),
-            const Text('Fuga', style: TextStyle(fontSize: 18),),
-            const SizedBox(height: 15,),
-            Fuga(
-              fuga: fuga,
-              observacionPersonal: observacionPersonal,
-              observacion: observacion,
-            ),
-            const SizedBox(height: 40,),
-            const Text('Fotos', style: TextStyle(fontSize: 18),),
-            const SizedBox(height: 15,),
-            SizedBox(
-                width: size.width * 0.85,
-                child: ElevatedButton(
+                const Text(
+                  'Datos de la Instalación',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInstalacion(
+                  controlador: nombreInstalacion,
+                  hinText: 'Nombre de la Instalación',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInstalacion(
+                  controlador: ubicacionInstalacion,
+                  hinText: 'Ubicación de la Instalación',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                AlertaInstalacion(
+                    valorCampo: equipoCritico, hinText: 'Equipo Critico'),
+                const SizedBox(
+                  height: 15,
+                ),
+                AlertaInstalacion(
+                    valorCampo: inspeccionTecnicaRiesgo,
+                    hinText: 'Inspección Tecnica de Riesgo'),
+                const SizedBox(
+                  height: 40,
+                ),
+                const Text(
+                  'Datos de la inspección',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInspeccion(
+                  controlador: nombrePersonal,
+                  hinText: 'Nombre del personal',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoFecha(
+                  controlador: fechaInicioInspeccion,
+                  hinText: 'Fecha de inicio de la inspección',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoHora(
+                  controlador: horaInicioInspeccion,
+                  hinText: 'Hora de inicio de la inspección}',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoFecha(
+                  controlador: fechafinalizacionInspeccion,
+                  hinText: 'Fecha final de la inspección',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoHora(
+                  controlador: horafinalizacionInspeccion,
+                  hinText: 'Hora final de la inspección',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInspeccion(
+                    controlador: velocidadViento, hinText: 'Velocidad/Viento'),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInspeccion(
+                    controlador: temperatura, hinText: 'Temperatura'),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInspeccion(
+                    controlador: instrumentoUtilizado,
+                    hinText: 'Instrumento Utilizado'),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoFecha(
+                    controlador: fechaCalibracion,
+                    hinText: 'Fecha de la Calibración'),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInspeccion(
+                    controlador: desviacionProcedimiento,
+                    hinText: 'Desviación procedimiento'),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInspeccion(
+                    controlador: justificacionDesviacion,
+                    hinText: 'Justificación de la desviación'),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInspeccion(
+                    controlador: interferenciaDeteccion,
+                    hinText: 'Interferencia detección'),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInspeccion(
+                    controlador: concentracionPrevia,
+                    hinText: 'Concentración previa'),
+                const SizedBox(
+                  height: 40,
+                ),
+                const Text(
+                  'Reparación',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoPudoSerRapado(
+                    reparado: reparado,
+                    hinText: '¿Pudo Ser Reparado?',
+                    fechaReparacion: fechaReparacion,
+                    horaReparacion: horaReparacion,
+                    fechaComprobacionReparacion: fechaComprobacionReparacion,
+                    horaComprobacionReparacion: horaComprobacionReparacion,
+                    concentracionPosteriorReparacion:
+                        concentracionPosteriorReparacion,
+                    noReparadofaltaComponentes: noReparadofaltaComponentes,
+                    fechaRemisionComponente: fechaRemisionComponente,
+                    fechaReperacionComponente: fechaReperacionComponente,
+                    fechaRemplazoEquipo: fechaRemplazoEquipo,
+                    volumenMetano: volumenMetano),
+                const SizedBox(
+                  height: 15,
+                ),
+                // APARECER EL OTRO FORMULARIO DE REPARADO
+                (esReparado.getReparado == '')
+                    ? const SizedBox()
+                    : const SizedBox(),
+                (esReparado.getReparado == 'Si')
+                    ? ReparadoSi(
+                        fechaReparacion: fechaReparacion,
+                        horaReparacion: horaReparacion,
+                        fechaComprobacionReparacion:
+                            fechaComprobacionReparacion,
+                        horaComprobacionReparacion: horaComprobacionReparacion,
+                        concentracionPosteriorReparacion:
+                            concentracionPosteriorReparacion)
+                    : Container(),
+                (esReparado.getReparado == 'No')
+                    ? ReparadoNo(
+                        noReparadofaltaComponentes: noReparadofaltaComponentes,
+                        fechaRemisionComponente: fechaRemisionComponente,
+                        fechaReperacionComponente: fechaReperacionComponente,
+                        fechaRemplazoEquipo: fechaRemplazoEquipo,
+                        volumenMetano: volumenMetano)
+                    : Container(),
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text(
+                  'Fuga',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Fuga(
+                  fuga: fuga,
+                  observacionPersonal: observacionPersonal,
+                  observacion: observacion,
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                const Text(
+                  'Fotos',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
+                  width: size.width * 0.85,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                      onPressed: () async {
+                        imageF = await cargarFotoFirestore();
+                        if (imageF == null) {
+                          imagen.text = 'null';
+                        } else {
+                          setState(() {
+                            imgUploadF = File(imageF!.path);
+                            imagen.text = imgUploadF.path;
+                          });
+                        }
+                      },
+                      child: const Text('Tomar Fotografía')),
+                ),
+                imagen.text != 'null' && imagen.text != ''
+                    ? SizedBox(
+                        width: 200,
+                        height: 100,
+                        child: (imagen.text != 'null' && imagen.text != '')
+                            ? Image.file(imgUploadF)
+                            : const Text(''),
+                      )
+                    : const SizedBox(),
+                const SizedBox(
+                  height: 15,
+                ),
+                SizedBox(
+                  width: size.width * 0.85,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                      onPressed: () async {
+                        imageT = await cargarFotoTermograficaFirestore();
+                        if (imageT == null) {
+                          imagenInfrarroja.text = 'null';
+                        } else {
+                          setState(() {
+                            imgUploadT = File(imageT!.path);
+                            imagenInfrarroja.text = imgUploadT.path;
+                          });
+                        }
+                      },
+                      child: const Text('Tomar Fotografía Infrarroja')),
+                ),
+                imagenInfrarroja.text != 'null' && imagenInfrarroja.text != ''
+                    ? SizedBox(
+                        width: 200,
+                        height: 100,
+                        child: (imagenInfrarroja.text != 'null' &&
+                                imagenInfrarroja.text != '')
+                            ? Image.file(imgUploadT)
+                            : const Text(''),
+                      )
+                    : const SizedBox(),
+                const SizedBox(
+                  height: 30,
+                ),
+
+                // ENVIAR DATOS
+
+                SizedBox(
+                  width: size.width * 0.85,
+                  child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
                     onPressed: () async {
-                      imageF = await cargarFotoFirestore();
-                      if (imageF == null) {
-                        imagen.text = 'null';
-                      } else {
-                        setState(() {
-                          imgUploadF = File(imageF!.path);
-                          imagen.text = imgUploadF.path;
-                        });
-                      }
-                    },
-                    child: const Text('Tomar Fotografía')),
-              ),
-            imagen.text != 'null' && imagen.text != ''
-                  ? SizedBox(
-                      width: 200,
-                      height: 100,
-                      child: (imagen.text != 'null' && imagen.text != '')
-                          ? Image.file(imgUploadF)
-                          : const Text(''),
-                    )
-                  : const SizedBox(),
-            const SizedBox(height: 15,),
-            SizedBox(
-                width: size.width * 0.85,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                    onPressed: () async {
-                      imageT = await cargarFotoTermograficaFirestore();
-                      if (imageT == null) {
-                        imagenInfrarroja.text = 'null';
-                      } else {
-                        setState(() {
-                          imgUploadT = File(imageT!.path);
-                          imagenInfrarroja.text = imgUploadT.path;
-                        });
-                      }
-                    },
-                    child: const Text('Tomar Fotografía Infrarroja')),
-              ),
-              imagenInfrarroja.text != 'null' && imagenInfrarroja.text != ''
-                  ? SizedBox(
-                      width: 200,
-                      height: 100,
-                      child: (imagenInfrarroja.text != 'null' &&
-                              imagenInfrarroja.text != '')
-                          ? Image.file(imgUploadT)
-                          : const Text(''),
-                    )
-                  : const SizedBox(),
-            const SizedBox(height: 30,),
+                      // if (imagen.text != '' && imagenInfrarroja.text != '') {
+                      //   imagen.text = await subirFotoFireStorage(File(imagen.text));
+                      //   imagenInfrarroja.text =
+                      //       await subirfotoTermograficaFireStorage(
+                      //           File(imagenInfrarroja.text));
+                      // }
 
-            // ENVIAR DATOS
-
-            SizedBox(
-                width: size.width * 0.85,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ),
-                  onPressed: () async {
-                    // if (imagen.text != '' && imagenInfrarroja.text != '') {
-                    //   imagen.text = await subirFotoFireStorage(File(imagen.text));
-                    //   imagenInfrarroja.text =
-                    //       await subirfotoTermograficaFireStorage(
-                    //           File(imagenInfrarroja.text));
-                    // }
-
-                    InsertarAnexoCinco().insertarAnexoCinco(
-                      AnexoCinco(
+                      InsertarAnexoCinco().insertarAnexoCinco(AnexoCinco(
                         // INSTALACION
-                        nombreInstalacion : nombreInstalacion.text,
-                        ubicacionInstalacion : ubicacionInstalacion.text,
-                        equipoCritico : equipoCritico.text,
-                        inspeccionTecnicaRiesgo : inspeccionTecnicaRiesgo.text,
+                        nombreInstalacion: nombreInstalacion.text,
+                        ubicacionInstalacion: ubicacionInstalacion.text,
+                        equipoCritico: equipoCritico.text,
+                        inspeccionTecnicaRiesgo: inspeccionTecnicaRiesgo.text,
 
                         // INSPECCION
-                        nombrePersonal : nombrePersonal.text,
-                        fechaInicioInspeccion : fechaInicioInspeccion.text,
-                        horaInicioInspeccion : horaInicioInspeccion.text,
-                        fechafinalizacionInspeccion : fechafinalizacionInspeccion.text,
-                        horafinalizacionInspeccion : horafinalizacionInspeccion.text,
-                        velocidadViento : velocidadViento.text,
-                        temperatura : temperatura.text,
-                        instrumentoUtilizado : instrumentoUtilizado.text,
-                        fechaCalibracion : fechaCalibracion.text,
-                        desviacionProcedimiento : desviacionProcedimiento.text,
-                        justificacionDesviacion : justificacionDesviacion.text,
-                        interferenciaDeteccion : interferenciaDeteccion.text,
-                        concentracionPrevia : concentracionPrevia.text,
-                        reparado : reparado.text,
+                        nombrePersonal: nombrePersonal.text,
+                        fechaInicioInspeccion: fechaInicioInspeccion.text,
+                        horaInicioInspeccion: horaInicioInspeccion.text,
+                        fechafinalizacionInspeccion:
+                            fechafinalizacionInspeccion.text,
+                        horafinalizacionInspeccion:
+                            horafinalizacionInspeccion.text,
+                        velocidadViento: velocidadViento.text,
+                        temperatura: temperatura.text,
+                        instrumentoUtilizado: instrumentoUtilizado.text,
+                        fechaCalibracion: fechaCalibracion.text,
+                        desviacionProcedimiento: desviacionProcedimiento.text,
+                        justificacionDesviacion: justificacionDesviacion.text,
+                        interferenciaDeteccion: interferenciaDeteccion.text,
+                        concentracionPrevia: concentracionPrevia.text,
+                        reparado: reparado.text,
 
                         // REPARADO SI
-                        fechaReparacion : fechaReparacion.text,
-                        horaReparacion : horaReparacion.text,
-                        fechaComprobacionReparacion : fechaComprobacionReparacion.text,
-                        horaComprobacionReparacion : horaComprobacionReparacion.text,
-                        concentracionPosteriorReparacion : concentracionPosteriorReparacion.text,
+                        fechaReparacion: fechaReparacion.text,
+                        horaReparacion: horaReparacion.text,
+                        fechaComprobacionReparacion:
+                            fechaComprobacionReparacion.text,
+                        horaComprobacionReparacion:
+                            horaComprobacionReparacion.text,
+                        concentracionPosteriorReparacion:
+                            concentracionPosteriorReparacion.text,
 
                         // REPARADO NO
-                        noReparadofaltaComponentes : noReparadofaltaComponentes.text,
-                        fechaRemisionComponente : fechaRemisionComponente.text,
-                        fechaReperacionComponente : fechaReperacionComponente.text,
-                        fechaRemplazoEquipo : fechaRemplazoEquipo.text,
-                        volumenMetano : volumenMetano.text,
+                        noReparadofaltaComponentes:
+                            noReparadofaltaComponentes.text,
+                        fechaRemisionComponente: fechaRemisionComponente.text,
+                        fechaReperacionComponente:
+                            fechaReperacionComponente.text,
+                        fechaRemplazoEquipo: fechaRemplazoEquipo.text,
+                        volumenMetano: volumenMetano.text,
 
                         // FUGA
-
-                        fuga : fuga.text,
-                        observacionPersonal : observacionPersonal.text,
-                        observacion : observacion.text,
+                        fuga: fuga.text,
+                        observacionPersonal: observacionPersonal.text,
+                        observacion: observacion.text,
 
                         // IMAGENES
-                        imagen : imagen.text,
-                        imagenInfrarroja : imagenInfrarroja.text,
+                        imagen: imagen.text,
+                        imagenInfrarroja: imagenInfrarroja.text,
 
-                        timestamp: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-                        clienteID: clienteID as int,
-                      )
-                    );
-                   
-                   // INSTALACION
-                    nombreInstalacion.text = '';
-                    ubicacionInstalacion.text = '';
-                    equipoCritico.text = '';
-                    inspeccionTecnicaRiesgo.text = '';
+                        timestamp:
+                            DateTime.now().millisecondsSinceEpoch ~/ 1000,
+                        clienteID: id,
+                      ));
 
-                    // INSPECCION
-                    nombrePersonal.text = '';
-                    fechaInicioInspeccion.text = '';
-                    horaInicioInspeccion.text = '';
-                    fechafinalizacionInspeccion.text = '';
-                    horafinalizacionInspeccion.text = '';
-                    velocidadViento.text = '';
-                    temperatura.text = '';
-                    instrumentoUtilizado.text = '';
-                    fechaCalibracion.text = '';
-                    desviacionProcedimiento.text = '';
-                    justificacionDesviacion.text = '';
-                    interferenciaDeteccion.text = '';
-                    concentracionPrevia.text = '';
-                    reparado.text = '';
+                      // INSTALACION
+                      nombreInstalacion.text = '';
+                      ubicacionInstalacion.text = '';
+                      equipoCritico.text = '';
+                      inspeccionTecnicaRiesgo.text = '';
 
-                    // REPARADO SI
-                    fechaReparacion.text = '';
-                    horaReparacion.text = '';
-                    fechaComprobacionReparacion.text = '';
-                    horaComprobacionReparacion.text = '';
-                    concentracionPosteriorReparacion.text = '';
+                      // INSPECCION
+                      nombrePersonal.text = '';
+                      fechaInicioInspeccion.text = '';
+                      horaInicioInspeccion.text = '';
+                      fechafinalizacionInspeccion.text = '';
+                      horafinalizacionInspeccion.text = '';
+                      velocidadViento.text = '';
+                      temperatura.text = '';
+                      instrumentoUtilizado.text = '';
+                      fechaCalibracion.text = '';
+                      desviacionProcedimiento.text = '';
+                      justificacionDesviacion.text = '';
+                      interferenciaDeteccion.text = '';
+                      concentracionPrevia.text = '';
+                      reparado.text = '';
 
-                    // REPARADO NO
-                    noReparadofaltaComponentes.text = '';
-                    fechaRemisionComponente.text = '';
-                    fechaReperacionComponente.text = '';
-                    fechaRemplazoEquipo.text = '';
-                    volumenMetano.text = '';
+                      // REPARADO SI
+                      fechaReparacion.text = '';
+                      horaReparacion.text = '';
+                      fechaComprobacionReparacion.text = '';
+                      horaComprobacionReparacion.text = '';
+                      concentracionPosteriorReparacion.text = '';
 
-                    // FUGA
+                      // REPARADO NO
+                      noReparadofaltaComponentes.text = '';
+                      fechaRemisionComponente.text = '';
+                      fechaReperacionComponente.text = '';
+                      fechaRemplazoEquipo.text = '';
+                      volumenMetano.text = '';
 
-                    fuga.text  = '';
-                    observacionPersonal.text = '';
-                    observacion.text = '';
+                      // FUGA
 
-                    // IMAGENES
-                    imagen.text = '';
-                    imagenInfrarroja.text = '';
-                    Navigator.pushNamed(context, 'home');
-                  },
-                  child: const Text('Guardar Datos Anexo V'),
+                      fuga.text = '';
+                      observacionPersonal.text = '';
+                      observacion.text = '';
+
+                      // IMAGENES
+                      imagen.text = '';
+                      imagenInfrarroja.text = '';
+                      Navigator.pushNamed(context, 'home');
+                    },
+                    child: const Text('Guardar Datos Anexo V'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 30,),
-            ],
-          )),
+                const SizedBox(
+                  height: 30,
+                ),
+              ],
+            )),
       ),
     );
   }
@@ -491,23 +613,22 @@ class CampoInspeccion extends StatelessWidget {
   }
 }
 
-
 class CampoPudoSerRapado extends StatelessWidget {
-  const CampoPudoSerRapado(
-      {super.key,
-      required this.reparado,
-      required this.hinText,
-      
+  const CampoPudoSerRapado({
+    super.key,
+    required this.reparado,
+    required this.hinText,
     required this.fechaReparacion,
     required this.horaReparacion,
     required this.fechaComprobacionReparacion,
     required this.horaComprobacionReparacion,
-    required this.concentracionPosteriorReparacion, 
-    required this.noReparadofaltaComponentes, 
-    required this.fechaRemisionComponente, 
-    required this.fechaReperacionComponente, 
-    required this.fechaRemplazoEquipo, 
-    required this.volumenMetano,});
+    required this.concentracionPosteriorReparacion,
+    required this.noReparadofaltaComponentes,
+    required this.fechaRemisionComponente,
+    required this.fechaReperacionComponente,
+    required this.fechaRemplazoEquipo,
+    required this.volumenMetano,
+  });
 
   final TextEditingController reparado;
   final String hinText;

@@ -38,14 +38,15 @@ class DatabaseProvider {
         "CREATE TABLE $anexoTABLENAME (anexoID INTEGER PRIMARY KEY AUTOINCREMENT, nombreInstalacion TEXT, ubicacionInstalacion TEXT, equipoCritico TEXT, inspeccionTecnicaRiesgo TEXT, nombrePersonal TEXT, fechaInicioInspeccion TEXT, horaInicioInspeccion TEXT, fechafinalizacionInspeccion TEXT, horafinalizacionInspeccion TEXT, velocidadViento TEXT, temperatura TEXT, instrumentoUtilizado TEXT, fechaCalibracion TEXT, desviacionProcedimiento TEXT, justificacionDesviacion TEXT, interferenciaDeteccion TEXT, concentracionPrevia TEXT, reparado TEXT, fechaReparacion TEXT, horaReparacion TEXT, fechaComprobacionReparacion TEXT, horaComprobacionReparacion TEXT, concentracionPosteriorReparacion TEXT, noReparadofaltaComponentes TEXT, fechaRemisionComponente TEXT, fechaReperacionComponente TEXT, fechaRemplazoEquipo TEXT, volumenMetano TEXT, fuga TEXT, observacionPersonal TEXT, observacion TEXT, imagen TEXT, imagenInfrarroja TEXT, timestamp INTEGER, clienteID INTEGER NOT NULL, FOREIGN KEY(clienteID) REFERENCES $clientTABLENAME(clienteID))");
   }
 
-  static Future<List<Map<String, dynamic>>> getDataFromTable(String tableName) async {
+  static Future<List<Map<String, dynamic>>> getDataFromTable(
+      String tableName) async {
     final db = await DatabaseProvider.db.database;
     final List<Map<String, dynamic>> data = await db!.query(tableName);
     return data;
   }
 
   static Future<void> sincronizarDatosCliente() async {
-    final db =  await DatabaseProvider.db.database;
+    final db = await DatabaseProvider.db.database;
     final data = await db!.query(clientTABLENAME);
 
     for (final row in data) {
@@ -56,8 +57,8 @@ class DatabaseProvider {
   }
 
   static Future<void> sincronizarDatosAnexo() async {
-    final db =  await DatabaseProvider.db.database;
-    final data = await db!.query(clientTABLENAME);
+    final db = await DatabaseProvider.db.database;
+    final data = await db!.query(anexoTABLENAME);
 
     for (final row in data) {
       final id = row['anexoID'].toString();

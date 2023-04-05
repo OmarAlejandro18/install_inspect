@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:install_inspect/src/providers/providers.dart';
 import 'package:install_inspect/src/screens/screens.dart';
+import 'package:install_inspect/src/theme/app_tema.dart';
 import 'package:provider/provider.dart';
 
 // IMPORTACIONES DE FIREBASE
@@ -37,8 +38,9 @@ class MyApp extends StatelessWidget {
           'formInspeccion': (_) => const FormularioInspeccionScreen(),
           'InpeccionInfo': (_) => const InspeccionInfo(),
           'clienteScreen': (_) => ClienteScreen(),
-          'formAnexoCinco' : (_) => const FormularioAnexoScreen(), 
+          'formAnexoCinco': (_) => const FormularioAnexoScreen(),
         },
+        theme: AppTheme.lightTheme,
       ),
     );
   }

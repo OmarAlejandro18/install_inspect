@@ -1,6 +1,5 @@
 class AnexoCinco {
   // INSTALACIÓN
-  //final int componenteID;
   final String nombreInstalacion;
   final String ubicacionInstalacion;
   final String equipoCritico;
@@ -49,7 +48,6 @@ class AnexoCinco {
 
   // FORANEA
   final int clienteID;
-
 
   AnexoCinco({
     //INSTALACION
@@ -154,7 +152,7 @@ class AnexoCinco {
       'timestamp': timestamp,
 
       // CLIENTE
-      'clienteID' : clienteID 
+      'clienteID': clienteID
     };
   }
 }
