@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         initialRoute: 'home',
         routes: {
           'home': (_) => const HomeScreen(),
+          'inicio': (_) => const HomeScreen(),
           'formInstalacion': (_) => FormularioInstalacionScreen(),
           'formInspeccion': (_) => const FormularioInspeccionScreen(),
           'InpeccionInfo': (_) => const InspeccionInfo(),

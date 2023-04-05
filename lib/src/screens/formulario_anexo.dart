@@ -501,6 +501,8 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                       // IMAGENES
                       imagen.text = '';
                       imagenInfrarroja.text = '';
+
+                      //Navigator.popUntil(context, ModalRoute.withName('inicio'));
                       Navigator.pushNamed(context, 'home');
                     },
                     child: const Text('Guardar Datos Anexo V'),

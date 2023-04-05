@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/helper_db.dart';
+import 'package:install_inspect/src/screens/formulario_cliente_screen.dart';
 import 'package:install_inspect/src/theme/app_tema.dart';
 import '../services/firebase_services.dart';
 
@@ -100,7 +101,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
-        onPressed: () => Navigator.pushNamed(context, 'clienteScreen'),
+        onPressed: () => {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ClienteScreen()),
+          )
+        },
+        //Navigator.pushNamed(context, 'clienteScreen'),
         child: const Icon(Icons.add),
       ),
     );
