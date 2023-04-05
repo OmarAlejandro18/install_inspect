@@ -1,6 +1,7 @@
 class AnexoCinco {
   // INSTALACIÓN
   final String nombreInstalacion;
+  final String idComponente;
   final String ubicacionInstalacion;
   final String equipoCritico;
   final String inspeccionTecnicaRiesgo;
@@ -46,12 +47,17 @@ class AnexoCinco {
 
   final int timestamp;
 
+  // CAMPOS VACIOS
+  final String anexoURL;
+  final String informeURL;
+
   // FORANEA
   final int clienteID;
 
   AnexoCinco({
     //INSTALACION
     required this.nombreInstalacion,
+    required this.idComponente,
     required this.ubicacionInstalacion,
     required this.equipoCritico,
     required this.inspeccionTecnicaRiesgo,
@@ -98,6 +104,10 @@ class AnexoCinco {
     // TIEMPO
     required this.timestamp,
 
+    // CAMPOS VACIOS
+    required this.anexoURL,
+    required this.informeURL,
+
     // CLIENTE ID
     required this.clienteID,
   });
@@ -105,6 +115,7 @@ class AnexoCinco {
     return {
       //'instalacionID': instalacionID,
       'nombreInstalacion': nombreInstalacion,
+      'idComponente' : idComponente,
       'ubicacionInstalacion': ubicacionInstalacion,
       'equipoCritico': equipoCritico,
       'inspeccionTecnicaRiesgo': inspeccionTecnicaRiesgo,
@@ -151,8 +162,12 @@ class AnexoCinco {
       // TIEMPO
       'timestamp': timestamp,
 
+      // CAMPOS VACIOS
+      'anexoURL' : anexoURL,
+      'informeURL' : informeURL, 
+
       // CLIENTE
-      'clienteID': clienteID
+      'clienteID': clienteID,
     };
   }
 }

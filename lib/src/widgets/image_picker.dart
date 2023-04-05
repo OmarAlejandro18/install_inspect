@@ -47,11 +47,12 @@ Future<XFile?> cargarFotoTermograficaFirestore() async {
 }
 
 Future<String> subirFotoFireStorage(File imageFile) async {
+  // ignore: unnecessary_null_comparison
   if (imageFile != null) {
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child(
-            'inspecciones/foto/${'inspeccionFN' + DateTime.now().toString().substring(0, 10) + '_' + DateTime.now().millisecondsSinceEpoch.toString()}.png');
+            'inspecciones/foto/${'inspeccionFN${DateTime.now().toString().substring(0, 10)}_${DateTime.now().millisecondsSinceEpoch}'}.png');
     await ref.putFile(imageFile);
     return await ref.getDownloadURL();
   } else {}
@@ -59,11 +60,12 @@ Future<String> subirFotoFireStorage(File imageFile) async {
 }
 
 Future<String> subirfotoTermograficaFireStorage(File imageFile) async {
+  // ignore: unnecessary_null_comparison
   if (imageFile != null) {
     firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child(
-            'inspecciones/fotosTermograficas/${'inspeccionFT' + DateTime.now().toString().substring(0, 10) + '_' + DateTime.now().millisecondsSinceEpoch.toString()}.png');
+            'inspecciones/fotosTermograficas/${'inspeccionFT${DateTime.now().toString().substring(0, 10)}_${DateTime.now().millisecondsSinceEpoch}'}.png');
     await ref.putFile(imageFile);
     return await ref.getDownloadURL();
   } else {

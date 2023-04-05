@@ -57,7 +57,7 @@ class _CampoHoraState extends State<CampoHora> {
     String hora;
     return showTimePicker(context: context, initialTime: TimeOfDay.now())
         .then((value) => setState(() {
-              print('el valor es del time $value');
+              //print('el valor es del time $value');
               hora = value.toString();
               if ((value == null)) {
                 widget.controlador.text = '';

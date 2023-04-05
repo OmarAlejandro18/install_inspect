@@ -20,13 +20,13 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => FugaProvider()),
         ChangeNotifierProvider(create: (context) => ReparadoProvider()),
+        ChangeNotifierProvider(create: (context) => ClienteProvider())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -35,11 +35,11 @@ class MyApp extends StatelessWidget {
         routes: {
           'home': (_) => const HomeScreen(),
           'inicio': (_) => const HomeScreen(),
-          'formInstalacion': (_) => FormularioInstalacionScreen(),
-          'formInspeccion': (_) => const FormularioInspeccionScreen(),
+          //'formInstalacion': (_) => FormularioInstalacionScreen(),
+          //'formInspeccion': (_) => const FormularioInspeccionScreen(),
           'InpeccionInfo': (_) => const InspeccionInfo(),
-          'clienteScreen': (_) => ClienteScreen(),
-          'formAnexoCinco': (_) => const FormularioAnexoScreen(),
+          'clienteScreen': (_) => const ClienteScreen(),
+          //'formAnexoCinco': (_) => const FormularioAnexoScreen(),
         },
         theme: AppTheme.lightTheme,
       ),

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/helper_db.dart';
 import 'package:install_inspect/src/db/insertar_cliente.dart';
 import 'package:install_inspect/src/models/cliente_model.dart';
+import 'package:install_inspect/src/providers/providers.dart';
+import 'package:install_inspect/src/screens/screens.dart';
 import 'package:install_inspect/src/theme/app_tema.dart';
+import 'package:provider/provider.dart';
 
 class ClienteScreen extends StatefulWidget {
-  ClienteScreen({super.key});
+  const ClienteScreen({super.key});
 
   @override
   State<ClienteScreen> createState() => _ClienteScreenState();
@@ -20,28 +23,51 @@ class _ClienteScreenState extends State<ClienteScreen> {
 
   final trimestre = TextEditingController();
 
+  // ignore: prefer_typing_uninitialized_variables
   late final clienteID;
 
-  List<DropdownMenuItem<Cliente>> _clientDropdownItems = [];
+  final List<DropdownMenuItem<Cliente>> _clientDropdownItems = [
+    const DropdownMenuItem<Cliente>(
+      value: null,
+      child: Text("Crear nuevo cliente"),
+    ),
+  ];
   Cliente? _selectedCliente;
-  FocusNode _dropdownFocusNode = FocusNode();
+  final FocusNode _dropdownFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    //_getClients();
+    getClients();
   }
 
-  void _getClients() async {
+  void getClients() async {
     final clientsData = await DatabaseProvider.getDataFromTable('cliente');
-    final List<Cliente> clients =
-        clientsData.map((data) => Cliente.fromMap(data)).toList();
-    _clientDropdownItems = clients.map((client) {
-      return DropdownMenuItem<Cliente>(
-        value: client,
-        child: Text(client.cliente),
-      );
-    }).toList();
+
+    if (clientsData.isEmpty) {
+      print('no tengo datos');
+    } else {
+      final List<Cliente> clients =
+          clientsData.map((data) => Cliente.fromMap(data)).toList();
+      _clientDropdownItems.addAll(clients.map((client) {
+        return DropdownMenuItem<Cliente>(
+          value: client,
+          child: Text(client.cliente),
+        );
+      }).toList());
+      if (_selectedCliente == null && clients.isNotEmpty) {
+        setState(() {
+          _selectedCliente = clients[0];
+        });
+      }
+    }
+    final db = await DatabaseProvider.db.database;
+    final lastId = await db!.rawQuery('SELECT last_insert_rowid() as id');
+
+    if (lastId.isNotEmpty) {
+      final Object? clientId = lastId.first['id'];
+      print('Último ID insertado en la tabla de clientes: $clientId');
+    }
   }
 
   // obtenerDatosAnexo() async {
@@ -51,6 +77,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final hayCliente = Provider.of<ClienteProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text('Clientes')),
@@ -63,107 +91,168 @@ class _ClienteScreenState extends State<ClienteScreen> {
             const SizedBox(
               height: 20,
             ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 25),
-            //   child: Container(
-            //     alignment: Alignment.centerLeft,
-            //     decoration: BoxDecoration(
-            //       color: Colors.white,
-            //       borderRadius: BorderRadius.circular(10),
-            //       boxShadow: const [
-            //         BoxShadow(
-            //           offset: Offset(4, -4),
-            //           blurRadius: 6,
-            //           color: Colors.black26,
-            //         ),
-            //       ],
-            //     ),
-            //     height: 60,
-            //     child: DropdownButtonFormField<Cliente>(
-            //       focusNode: _dropdownFocusNode,
-            //       value: _selectedCliente,
-            //       items: _clientDropdownItems,
-            //       onChanged: (value) {
-            //         setState(() {
-            //           _selectedCliente = value!;
-            //           cliente.text = value.cliente;
-            //           ciudad.text = value.ciudad;
-            //           trimestre.text = value.trimestre;
-            //         });
-            //       },
-            //       decoration: InputDecoration(
-            //         labelText: 'Selecciona el Cliente',
-            //         border: InputBorder.none,
-            //         contentPadding: EdgeInsets.only(top: 14),
-            //         prefixIcon: Icon(
-            //           Icons.email,
-            //           color: Colors.white,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            const SizedBox(
-              height: 50,
+            const Padding(
+              padding: EdgeInsets.only(left: 25, right: 25, top: 10, bottom: 25),
+              child: Text("Selecciona una opción, en caso de no estar la opción que requiere seleccione 'Crear nuevo cliente'")),
+            
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [
+                    BoxShadow(
+                      offset: Offset(4, -4),
+                      blurRadius: 6,
+                      color: Colors.black26,
+                    ),
+                  ],
+                ),
+                height: 60,
+                child: DropdownButtonFormField<Cliente>(
+                  focusNode: _dropdownFocusNode,
+                  value: _selectedCliente,
+                  items: _clientDropdownItems,
+                  onChanged: (value) {
+                    if (value == null) {
+                      hayCliente.setCliente = value.toString();
+                      cliente.text = '';
+                      ciudad.text = '';
+                      trimestre.text = '';
+                    } else {
+                      setState(() {
+                        _selectedCliente = value;
+                        print('la seleccion tiene estos clientes ${value}');
+                        cliente.text = value.cliente;
+                        ciudad.text = value.ciudad;
+                        trimestre.text = value.trimestre;
+                      });
+                    }
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Selecciona el Cliente',
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(top: 14),
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ),
-            const Text(
-              'Ingresa los datos del Cliente',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            EntradaDato(
-              controlador: cliente,
-              hinText: 'Nombre del cliente',
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            EntradaDato(
-              controlador: ciudad,
-              hinText: 'Ciudad',
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            DropdownTrimestre(
-              trimestre: trimestre,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: AppTheme.primary),
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  clienteID = await InsertarCliente().agregarCliente(Cliente(
-                      cliente: cliente.text,
-                      ciudad: ciudad.text,
-                      trimestre: trimestre.text,
-                      timestamp:
-                          DateTime.now().millisecondsSinceEpoch ~/ 1000));
-
-                  // agregarClienteFirestore(Cliente(
-                  //     cliente: cliente.text,
-                  //     ciudad: ciudad.text,
-                  //     trimestre: trimestre.text,
-                  //     timestamp:
-                  //         DateTime.now().millisecondsSinceEpoch ~/ 1000)),
-                  cliente.text = '';
-                  ciudad.text = '';
-                  trimestre.text = '';
-
-                  Navigator.pushNamed(context, 'formAnexoCinco',
-                      arguments: clienteID);
-                }
-              },
-              child: const Text('Guardar Cliente'),
-            )
+            hayCliente.getCliente == 'null' && hayCliente.getCliente != ''
+                ? NuevoClienteForm(
+                    cliente: cliente,
+                    ciudad: ciudad,
+                    trimestre: trimestre,
+                    formKey: _formKey,
+                  )
+                : NuevoClienteForm(
+                    cliente: cliente,
+                    ciudad: ciudad,
+                    trimestre: trimestre,
+                    formKey: _formKey,
+                  ),
           ],
         ),
       )),
+    );
+  }
+}
+
+class NuevoClienteForm extends StatelessWidget {
+  NuevoClienteForm(
+      {super.key,
+      required this.cliente,
+      required this.ciudad,
+      required this.trimestre,
+      required this.formKey});
+
+  final GlobalKey<FormState> formKey;
+
+  final TextEditingController cliente;
+
+  final TextEditingController ciudad;
+
+  final TextEditingController trimestre;
+
+  // ignore: prefer_typing_uninitialized_variables
+  late final clienteID;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 50,
+        ),
+        const Text(
+          'Datos del Cliente',
+          style: TextStyle(fontSize: 18),
+        ),
+        const SizedBox(
+          height: 25,
+        ),
+        EntradaDato(
+          controlador: cliente,
+          hinText: 'Nombre del cliente',
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        EntradaDato(
+          controlador: ciudad,
+          hinText: 'Ciudad',
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        DropdownTrimestre(
+          trimestre: trimestre,
+        ),
+        const SizedBox(
+          height: 40,
+        ),
+        SizedBox(
+          width: 200,
+          height: 40,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primary),
+            onPressed: () async {
+              if (formKey.currentState!.validate()) {
+                clienteID = await InsertarCliente().agregarCliente(Cliente(
+                    cliente: cliente.text,
+                    ciudad: ciudad.text,
+                    trimestre: trimestre.text,
+                    timestamp: DateTime.now().millisecondsSinceEpoch ~/ 1000));
+        
+                // agregarClienteFirestore(Cliente(
+                //     cliente: cliente.text,
+                //     ciudad: ciudad.text,
+                //     trimestre: trimestre.text,
+                //     timestamp:
+                //         DateTime.now().millisecondsSinceEpoch ~/ 1000)),
+                cliente.text = '';
+                ciudad.text = '';
+                trimestre.text = '';
+        
+                 // ignore: use_build_context_synchronously
+                 Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => FormularioAnexoScreen(
+                                clienteID: clienteID,
+                        )),
+                    );
+                }
+            },
+            child: const Text('Guardar Cliente'),
+          ),
+        )
+      ],
     );
   }
 }
@@ -200,7 +289,7 @@ class EntradaDato extends StatelessWidget {
           ),
           validator: (value) {
             if (value!.isEmpty) {
-              return 'Por favor ingrese $hinText';
+              return 'Por favor Ingrese $hinText';
             }
             return null;
           },
@@ -252,7 +341,7 @@ class _DropdownTrimestreState extends State<DropdownTrimestre> {
           style: const TextStyle(
             color: Colors.black,
           ),
-          value: _dropdownValue,
+          value:  widget.trimestre.text != '' ? widget.trimestre.text : _dropdownValue,
           onChanged: (value) {
             setState(() {
               _dropdownValue = value!;

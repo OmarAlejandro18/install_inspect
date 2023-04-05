@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/helper_db.dart';
 import 'package:install_inspect/src/screens/formulario_cliente_screen.dart';
+import 'package:install_inspect/src/services/sincronizacion_datos.dart';
 import 'package:install_inspect/src/theme/app_tema.dart';
 import '../services/firebase_services.dart';
 
@@ -13,6 +14,8 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
+final _scaffey = GlobalKey<ScaffoldState>();
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -28,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffey,
       appBar: AppBar(
         title: const Center(
           child: Text('Datos Instalación-Inspección'),
@@ -37,9 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.cloud),
             onPressed: () async {
               // Aquí puedes colocar el código que se ejecutará cuando se presione el botón
-              print('Botón de subir a la nube');
               await DatabaseProvider.sincronizarDatosCliente();
               await DatabaseProvider.sincronizarDatosAnexo();
+              //await subirRegistrosAFirebaseStorage();
+              _showSnackBar();
             },
           ),
         ],
@@ -104,12 +109,20 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () => {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => ClienteScreen()),
+            MaterialPageRoute(builder: (context) => const ClienteScreen()),
           )
         },
         //Navigator.pushNamed(context, 'clienteScreen'),
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+
+void _showSnackBar(){
+  SnackBar snackBar = const SnackBar(
+    content: Text('Datos subidos a la Nube Exitosamente')
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

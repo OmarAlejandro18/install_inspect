@@ -1,7 +1,5 @@
 import 'package:install_inspect/src/db/helper_db.dart';
 import 'package:install_inspect/src/models/cliente_model.dart';
-import 'package:sqflite/sqflite.dart';
-
 class InsertarCliente {
   Future<int?> agregarCliente(Cliente cliente) async {
     final db = await DatabaseProvider.db.database;

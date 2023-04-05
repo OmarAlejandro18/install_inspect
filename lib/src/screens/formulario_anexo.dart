@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:install_inspect/src/db/insertar_anexo.dart';
 import 'package:install_inspect/src/models/anexocinco_model.dart';
 import 'package:install_inspect/src/providers/providers.dart';
+import 'package:install_inspect/src/screens/home_screen.dart';
 import 'package:install_inspect/src/theme/app_tema.dart';
 import 'package:install_inspect/src/widgets/image_picker.dart';
 import 'package:install_inspect/src/widgets/reparado_no.dart';
@@ -11,7 +12,9 @@ import 'package:install_inspect/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class FormularioAnexoScreen extends StatefulWidget {
-  const FormularioAnexoScreen({super.key});
+  const FormularioAnexoScreen({super.key, required this.clienteID});
+
+  final int clienteID;
 
   @override
   State<FormularioAnexoScreen> createState() => _FormularioAnexoScreenState();
@@ -21,6 +24,8 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final nombreInstalacion = TextEditingController();
+
+  final idComponente = TextEditingController();
 
   final ubicacionInstalacion = TextEditingController();
 
@@ -88,8 +93,8 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
 
   // FOTOS
   final imagen = TextEditingController();
-
   final imagenInfrarroja = TextEditingController();
+
 
   late File imgUploadF;
 
@@ -101,8 +106,8 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var clienteID = ModalRoute.of(context)!.settings.arguments;
-    int id = clienteID as int;
+    // var clienteID = ModalRoute.of(context)!.settings.arguments;
+    // int id = clienteID as int;
     final size = MediaQuery.of(context).size;
     final esReparado = Provider.of<ReparadoProvider>(context);
 
@@ -128,6 +133,13 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                 CampoInstalacion(
                   controlador: nombreInstalacion,
                   hinText: 'Nombre de la Instalación',
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CampoInstalacion(
+                  controlador: idComponente,
+                  hinText: 'ID del componente',
                 ),
                 const SizedBox(
                   height: 15,
@@ -401,6 +413,7 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                       InsertarAnexoCinco().insertarAnexoCinco(AnexoCinco(
                         // INSTALACION
                         nombreInstalacion: nombreInstalacion.text,
+                        idComponente: idComponente.text,
                         ubicacionInstalacion: ubicacionInstalacion.text,
                         equipoCritico: equipoCritico.text,
                         inspeccionTecnicaRiesgo: inspeccionTecnicaRiesgo.text,
@@ -453,11 +466,17 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
 
                         timestamp:
                             DateTime.now().millisecondsSinceEpoch ~/ 1000,
-                        clienteID: id,
+                        
+                        anexoURL: '',
+                        informeURL: '',
+                        
+                        clienteID: widget.clienteID,
+                        
                       ));
 
                       // INSTALACION
                       nombreInstalacion.text = '';
+                      idComponente.text = '';
                       ubicacionInstalacion.text = '';
                       equipoCritico.text = '';
                       inspeccionTecnicaRiesgo.text = '';
@@ -503,7 +522,13 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                       imagenInfrarroja.text = '';
 
                       //Navigator.popUntil(context, ModalRoute.withName('inicio'));
-                      Navigator.pushNamed(context, 'home');
+                      //Navigator.pushNamed(context, 'home');
+
+                      Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomeScreen()),
+                  );
                     },
                     child: const Text('Guardar Datos Anexo V'),
                   ),
