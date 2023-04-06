@@ -92,9 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                             'Trimestre:   ${snapshot.data!.docs[i]['trimestre']}'),
                         const SizedBox(height: 5),
-                        Text(
-                            'Timestamp:   ${snapshot.data!.docs[i]['timestamp']}'),
-                        const SizedBox(height: 5),
                       ],
                     ),
                   ),
@@ -118,11 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-void _showSnackBar(){
-  SnackBar snackBar = const SnackBar(
-    content: Text('Datos subidos a la Nube Exitosamente')
-  );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  void _showSnackBar() {
+    SnackBar snackBar =
+        const SnackBar(content: Text('Datos subidos a la Nube Exitosamente'));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

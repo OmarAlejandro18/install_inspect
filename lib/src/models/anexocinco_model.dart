@@ -1,4 +1,5 @@
 class AnexoCinco {
+  final int anexoID;
   // INSTALACIÓN
   final String nombreInstalacion;
   final String idComponente;
@@ -45,17 +46,16 @@ class AnexoCinco {
   final String imagen;
   final String imagenInfrarroja;
 
-  final int timestamp;
-
   // CAMPOS VACIOS
   final String anexoURL;
   final String informeURL;
-
+  final String trimestre;
   // FORANEA
   final int clienteID;
 
   AnexoCinco({
     //INSTALACION
+    required this.anexoID,
     required this.nombreInstalacion,
     required this.idComponente,
     required this.ubicacionInstalacion,
@@ -101,21 +101,19 @@ class AnexoCinco {
     required this.imagen,
     required this.imagenInfrarroja,
 
-    // TIEMPO
-    required this.timestamp,
-
     // CAMPOS VACIOS
     required this.anexoURL,
     required this.informeURL,
+    required this.trimestre,
 
     // CLIENTE ID
     required this.clienteID,
   });
   Map<String, dynamic> toMap() {
     return {
-      //'instalacionID': instalacionID,
+      'anexoID': anexoID,
       'nombreInstalacion': nombreInstalacion,
-      'idComponente' : idComponente,
+      'idComponente': idComponente,
       'ubicacionInstalacion': ubicacionInstalacion,
       'equipoCritico': equipoCritico,
       'inspeccionTecnicaRiesgo': inspeccionTecnicaRiesgo,
@@ -159,12 +157,10 @@ class AnexoCinco {
       'imagen': imagen,
       'imagenInfrarroja': imagenInfrarroja,
 
-      // TIEMPO
-      'timestamp': timestamp,
-
       // CAMPOS VACIOS
-      'anexoURL' : anexoURL,
-      'informeURL' : informeURL, 
+      'anexoURL': anexoURL,
+      'informeURL': informeURL,
+      'trimestre': trimestre,
 
       // CLIENTE
       'clienteID': clienteID,

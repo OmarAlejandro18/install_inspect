@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:install_inspect/src/db/insertar_anexo.dart';
 import 'package:install_inspect/src/models/anexocinco_model.dart';
 import 'package:install_inspect/src/providers/providers.dart';
-import 'package:install_inspect/src/screens/home_screen.dart';
+import 'package:install_inspect/src/screens/screens.dart';
 import 'package:install_inspect/src/theme/app_tema.dart';
 import 'package:install_inspect/src/widgets/image_picker.dart';
 import 'package:install_inspect/src/widgets/reparado_no.dart';
@@ -12,9 +12,11 @@ import 'package:install_inspect/src/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class FormularioAnexoScreen extends StatefulWidget {
-  const FormularioAnexoScreen({super.key, required this.clienteID});
+  const FormularioAnexoScreen(
+      {super.key, required this.clienteID, required this.trimestre});
 
   final int clienteID;
+  final String trimestre;
 
   @override
   State<FormularioAnexoScreen> createState() => _FormularioAnexoScreenState();
@@ -94,7 +96,6 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
   // FOTOS
   final imagen = TextEditingController();
   final imagenInfrarroja = TextEditingController();
-
 
   late File imgUploadF;
 
@@ -403,6 +404,8 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                       ),
                     ),
                     onPressed: () async {
+                      print('el id del cliente es ${widget.clienteID}');
+                      print('el trimestre es ${widget.trimestre}');
                       // if (imagen.text != '' && imagenInfrarroja.text != '') {
                       //   imagen.text = await subirFotoFireStorage(File(imagen.text));
                       //   imagenInfrarroja.text =
@@ -411,6 +414,7 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                       // }
 
                       InsertarAnexoCinco().insertarAnexoCinco(AnexoCinco(
+                        anexoID: DateTime.now().millisecondsSinceEpoch ~/ 1000,
                         // INSTALACION
                         nombreInstalacion: nombreInstalacion.text,
                         idComponente: idComponente.text,
@@ -464,14 +468,11 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                         imagen: imagen.text,
                         imagenInfrarroja: imagenInfrarroja.text,
 
-                        timestamp:
-                            DateTime.now().millisecondsSinceEpoch ~/ 1000,
-                        
                         anexoURL: '',
                         informeURL: '',
-                        
+                        trimestre: widget.trimestre,
+
                         clienteID: widget.clienteID,
-                        
                       ));
 
                       // INSTALACION
@@ -525,10 +526,10 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                       //Navigator.pushNamed(context, 'home');
 
                       Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const HomeScreen()),
-                  );
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()),
+                      );
                     },
                     child: const Text('Guardar Datos Anexo V'),
                   ),

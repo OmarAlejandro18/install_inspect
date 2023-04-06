@@ -1,32 +1,30 @@
 class Cliente {
-  late final String cliente;
-  late final String ciudad;
+  final int clienteID;
+  final String cliente;
+  final String ciudad;
   final String trimestre;
-  final int timestamp;
 
   Cliente(
-      {
-      //required this.instalacionID,
-      required this.cliente,
+      {required this.cliente,
       required this.ciudad,
       required this.trimestre,
-      required this.timestamp});
+      required this.clienteID});
+
   Map<String, dynamic> toMap() {
     return {
-      //'instalacionID': instalacionID,
+      'clienteID': clienteID,
       'cliente': cliente,
       'ciudad': ciudad,
       'trimestre': trimestre,
-      'timestamp': timestamp
     };
   }
 
   factory Cliente.fromMap(Map<String, dynamic> map) {
     return Cliente(
+      clienteID: map['clienteID'],
       cliente: map['cliente'],
       ciudad: map['ciudad'],
       trimestre: map['trimestre'],
-      timestamp: map['timestamp'],
     );
   }
 }

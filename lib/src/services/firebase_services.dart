@@ -6,7 +6,7 @@ import 'package:install_inspect/src/models/instalacion_model.dart';
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 Stream<QuerySnapshot> getDataInstalacionFirestore() {
-  return db.collection('Clientes').orderBy('timestamp').snapshots();
+  return db.collection('Clientes').orderBy('clienteID').snapshots();
 }
 
 Future<DocumentSnapshot> getFirestoreData() async {
