@@ -4,7 +4,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/helper_db.dart';
 import 'package:install_inspect/src/screens/formulario_cliente_screen.dart';
-import 'package:install_inspect/src/services/sincronizacion_datos.dart';
 import 'package:install_inspect/src/theme/app_tema.dart';
 import '../services/firebase_services.dart';
 
@@ -50,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: getDataInstalacionFirestore(),
+        stream: getDataCliente(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(child: Text('Error al cargar los datos'));

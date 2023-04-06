@@ -35,11 +35,7 @@ class MyApp extends StatelessWidget {
         routes: {
           'home': (_) => const HomeScreen(),
           'inicio': (_) => const HomeScreen(),
-          //'formInstalacion': (_) => FormularioInstalacionScreen(),
-          //'formInspeccion': (_) => const FormularioInspeccionScreen(),
-          'InpeccionInfo': (_) => const InspeccionInfo(),
           'clienteScreen': (_) => const ClienteScreen(),
-          //'formAnexoCinco': (_) => const FormularioAnexoScreen(),
         },
         theme: AppTheme.lightTheme,
       ),
