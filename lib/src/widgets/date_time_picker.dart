@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:install_inspect/src/theme/timepicker_theme.dart';
 import 'package:intl/intl.dart';
 
 class CampoFecha extends StatefulWidget {
@@ -12,8 +13,7 @@ class CampoFecha extends StatefulWidget {
 }
 
 class _CampoFechaState extends State<CampoFecha> {
-
-DateTime? fechaFormat;
+  DateTime? fechaFormat;
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +59,13 @@ DateTime? fechaFormat;
 
   selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2023),
-      lastDate: DateTime(2030),
-    );
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2023),
+        lastDate: DateTime(2030),
+        builder: (context, child) {
+          return temaDatePicker(context, child);
+        });
 
     String fecha;
     if (picked != null) {

@@ -45,7 +45,8 @@ dependencies:
   firebase_database: ^10.0.16
   connectivity_plus: ^3.0.3
   firebase_storage: ^11.1.0
-  intl: ^0.18.0
+  flutter_localization: ^0.1.10
+  intl: ^0.17.0
   connectivity_widget: ^1.0.0
   path_provider: ^2.0.14
   

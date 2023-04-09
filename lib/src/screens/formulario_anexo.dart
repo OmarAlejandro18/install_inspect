@@ -26,71 +26,44 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final nombreInstalacion = TextEditingController();
-
   final idComponente = TextEditingController();
-
   final ubicacionInstalacion = TextEditingController();
-
   final equipoCritico = TextEditingController();
-
   final inspeccionTecnicaRiesgo = TextEditingController();
 
   // DATOS INSPECCIÓN
   final nombrePersonal = TextEditingController();
-
   final fechaInicioInspeccion = TextEditingController();
-
   final horaInicioInspeccion = TextEditingController();
-
   final fechafinalizacionInspeccion = TextEditingController();
-
   final horafinalizacionInspeccion = TextEditingController();
-
   final velocidadViento = TextEditingController();
-
   final temperatura = TextEditingController();
-
   final instrumentoUtilizado = TextEditingController();
-
   final fechaCalibracion = TextEditingController();
-
   final desviacionProcedimiento = TextEditingController();
-
   final justificacionDesviacion = TextEditingController();
-
   final interferenciaDeteccion = TextEditingController();
-
   final concentracionPrevia = TextEditingController();
-
   final reparado = TextEditingController();
 
   // REPARADO SI
   final fechaReparacion = TextEditingController();
-
   final horaReparacion = TextEditingController();
-
   final fechaComprobacionReparacion = TextEditingController();
-
   final horaComprobacionReparacion = TextEditingController();
-
   final concentracionPosteriorReparacion = TextEditingController();
 
   // REPARADO NO
   final noReparadofaltaComponentes = TextEditingController();
-
   final fechaRemisionComponente = TextEditingController();
-
   final fechaReperacionComponente = TextEditingController();
-
   final fechaRemplazoEquipo = TextEditingController();
-
   final volumenMetano = TextEditingController();
 
   // FUGA
   final fuga = TextEditingController();
-
   final observacionPersonal = TextEditingController();
-
   final observacion = TextEditingController();
 
   // FOTOS
@@ -98,11 +71,8 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
   final imagenInfrarroja = TextEditingController();
 
   late File imgUploadF;
-
   XFile? imageF;
-
   late File imgUploadT;
-
   XFile? imageT;
 
   @override
@@ -186,7 +156,7 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                 ),
                 CampoHora(
                   controlador: horaInicioInspeccion,
-                  hinText: 'Hora de inicio de la inspección}',
+                  hinText: 'Hora de inicio de la inspección',
                 ),
                 const SizedBox(
                   height: 15,
@@ -406,12 +376,6 @@ class _FormularioAnexoScreenState extends State<FormularioAnexoScreen> {
                     onPressed: () async {
                       print('el id del cliente es ${widget.clienteID}');
                       print('el trimestre es ${widget.trimestre}');
-                      // if (imagen.text != '' && imagenInfrarroja.text != '') {
-                      //   imagen.text = await subirFotoFireStorage(File(imagen.text));
-                      //   imagenInfrarroja.text =
-                      //       await subirfotoTermograficaFireStorage(
-                      //           File(imagenInfrarroja.text));
-                      // }
 
                       InsertarAnexoCinco().insertarAnexoCinco(AnexoCinco(
                         anexoID: DateTime.now().millisecondsSinceEpoch ~/ 1000,

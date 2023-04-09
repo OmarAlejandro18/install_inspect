@@ -12,3 +12,16 @@ class ClienteProvider with ChangeNotifier {
     notifyListeners();
   }
 }
+
+class BotonClienteProvider with ChangeNotifier {
+  String botonN = 'Si';
+
+  get getTextBoton {
+    return botonN;
+  }
+
+  set setTextBoton(String botonT) {
+    botonN = botonT;
+    notifyListeners();
+  }
+}

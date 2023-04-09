@@ -42,13 +42,6 @@ class DatabaseProvider {
         "CREATE TABLE $anexoTABLENAME (anexoID INTEGER PRIMARY KEY, nombreInstalacion TEXT, idComponente TEXT, ubicacionInstalacion TEXT, equipoCritico TEXT, inspeccionTecnicaRiesgo TEXT, nombrePersonal TEXT, fechaInicioInspeccion TEXT, horaInicioInspeccion TEXT, fechafinalizacionInspeccion TEXT, horafinalizacionInspeccion TEXT, velocidadViento TEXT, temperatura TEXT, instrumentoUtilizado TEXT, fechaCalibracion TEXT, desviacionProcedimiento TEXT, justificacionDesviacion TEXT, interferenciaDeteccion TEXT, concentracionPrevia TEXT, reparado TEXT, fechaReparacion TEXT, horaReparacion TEXT, fechaComprobacionReparacion TEXT, horaComprobacionReparacion TEXT, concentracionPosteriorReparacion TEXT, noReparadofaltaComponentes TEXT, fechaRemisionComponente TEXT, fechaReperacionComponente TEXT, fechaRemplazoEquipo TEXT, volumenMetano TEXT, fuga TEXT, observacionPersonal TEXT, observacion TEXT, imagen TEXT, imagenInfrarroja TEXT, anexoURL TEXT, informeURL TEXT, trimestre TEXT, clienteID INTEGER NOT NULL, FOREIGN KEY(clienteID) REFERENCES $clientTABLENAME(clienteID))");
   }
 
-  static Future<List<Map<String, dynamic>>> getDataFromTable(
-      String tableName) async {
-    final db = await DatabaseProvider.db.database;
-    final List<Map<String, dynamic>> data = await db!.query(tableName);
-    return data;
-  }
-
   static Future<void> sincronizarDatosCliente() async {
     final db = await DatabaseProvider.db.database;
     final data = await db!.query(clientTABLENAME);
@@ -64,61 +57,64 @@ class DatabaseProvider {
     final db = await DatabaseProvider.db.database;
     final List<Map<String, dynamic>> data = await db!.query(anexoTABLENAME);
 
-    for (final row in data) {
-      final id = row['anexoID'].toString();
-      // Verificar si ya existen las URLs de las imágenes en el registro
-      final tieneImagen1 = row['imagen']
-          .toString()
-          .contains('https://firebasestorage.googleapis.com');
-      final tieneImagen2 = row['imagenInfrarroja']
-          .toString()
-          .contains('https://firebasestorage.googleapis.com');
+    if (data.isNotEmpty) {
+      for (final row in data) {
+        final id = row['anexoID'].toString();
+        // Verificar si ya existen las URLs de las imágenes en el registro
+        final tieneImagen1 = row['imagen']
+            .toString()
+            .contains('https://firebasestorage.googleapis.com');
+        final tieneImagen2 = row['imagenInfrarroja']
+            .toString()
+            .contains('https://firebasestorage.googleapis.com');
 
-      if (tieneImagen1 && tieneImagen2) {
-        // Las URLs de las imágenes ya existen, continuar con la creación del documento en Firestore
-        final anexoDocRef =
-            FirebaseFirestore.instance.collection('SeccionII').doc(id);
-        await anexoDocRef.set(row);
-      } else {
-        final List<String> imagePaths = [
-          row['imagen'],
-          row['imagenInfrarroja']
-        ];
-        final List<String> downloadUrls = [];
+        if (tieneImagen1 && tieneImagen2) {
+          // Las URLs de las imágenes ya existen, continuar con la creación del documento en Firestore
+          final anexoDocRef =
+              FirebaseFirestore.instance.collection('SeccionII').doc(id);
+          await anexoDocRef.set(row);
+        } else {
+          final List<String> imagePaths = [
+            row['imagen'],
+            row['imagenInfrarroja']
+          ];
+          final List<String> downloadUrls = [];
 
-        // Subir las imágenes a Firebase Storage
-        for (final imagePath in imagePaths) {
-          if (imagePath != null && !imagePath.isEmpty) {
-            final file = File(imagePath);
-            final bytes = await file.readAsBytes();
+          // Subir las imágenes a Firebase Storage
+          for (final imagePath in imagePaths) {
+            if (imagePath != null && !imagePath.isEmpty) {
+              final file = File(imagePath);
+              final bytes = await file.readAsBytes();
 
-            final storageRef = FirebaseStorage.instance
-                .ref()
-                .child('seccionII/${file.path.split('/').last}');
-            final uploadTask = storageRef.putData(bytes);
-            final snapshot = await uploadTask.whenComplete(() => null);
-            final downloadUrl = await snapshot.ref.getDownloadURL();
-            downloadUrls.add(downloadUrl);
+              final storageRef = FirebaseStorage.instance
+                  .ref()
+                  .child('seccionII/${file.path.split('/').last}');
+              final uploadTask = storageRef.putData(bytes);
+              final snapshot = await uploadTask.whenComplete(() => null);
+              final downloadUrl = await snapshot.ref.getDownloadURL();
+              downloadUrls.add(downloadUrl);
+            }
           }
-        }
 
-        final updatedRow = {...row};
-        if (!tieneImagen1 && downloadUrls.length > 0) {
-          updatedRow['imagen'] = downloadUrls[0];
-        }
-        if (!tieneImagen2 && downloadUrls.length > 1) {
-          updatedRow['imagenInfrarroja'] = downloadUrls[1];
-        }
+          final updatedRow = {...row};
+          if (!tieneImagen1 && downloadUrls.length > 0) {
+            updatedRow['imagen'] = downloadUrls[0];
+          }
+          if (!tieneImagen2 && downloadUrls.length > 1) {
+            updatedRow['imagenInfrarroja'] = downloadUrls[1];
+          }
 
-        await db.update(anexoTABLENAME, updatedRow,
-            where: 'anexoID = ?', whereArgs: [row['anexoID']]);
+          await db.update(anexoTABLENAME, updatedRow,
+              where: 'anexoID = ?', whereArgs: [row['anexoID']]);
 
-        // Crear un nuevo documento en la colección de Firestore
-        final anexoDocRef =
-            FirebaseFirestore.instance.collection('SeccionII').doc(id);
-        await anexoDocRef.set(updatedRow);
+          // Crear un nuevo documento en la colección de Firestore
+          final anexoDocRef =
+              FirebaseFirestore.instance.collection('SeccionII').doc(id);
+          await anexoDocRef.set(updatedRow);
+        }
       }
     }
+    await db.delete('anexocinco');
   }
 
 //   static Future<void> sincronizarDatosAnexo() async {

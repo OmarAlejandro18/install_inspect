@@ -3,9 +3,12 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:install_inspect/src/db/helper_db.dart';
+import 'package:install_inspect/src/db/obtener_datos.dart';
 import 'package:install_inspect/src/screens/formulario_cliente_screen.dart';
 import 'package:install_inspect/src/theme/app_tema.dart';
 import '../services/firebase_services.dart';
+
+final _scaffey = GlobalKey<ScaffoldState>();
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,9 +17,9 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-final _scaffey = GlobalKey<ScaffoldState>();
-
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +28,15 @@ class _HomeScreenState extends State<HomeScreen> {
         FirebaseDatabase.instance.goOnline();
       }
     });
+  }
+
+  hayDatosInspeccion() async {
+    List<Map<String, dynamic>> datosIns = await getDataFromTable('anexocinco');
+    if (datosIns.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -39,11 +51,46 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: const Icon(Icons.cloud),
             onPressed: () async {
-              // Aquí puedes colocar el código que se ejecutará cuando se presione el botón
-              await DatabaseProvider.sincronizarDatosCliente();
-              await DatabaseProvider.sincronizarDatosAnexo();
-              //await subirRegistrosAFirebaseStorage();
-              _showSnackBar();
+              if (await hayDatosInspeccion()) {
+                print('si hay datos');
+                // ignore: use_build_context_synchronously
+                showDialog(
+                  context: context,
+                  barrierDismissible:
+                      false, // Impedir cerrar el AlertDialog al hacer clic fuera de él
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Sincronizando...'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 10),
+                          Text('Por favor, espera...'),
+                        ],
+                      ),
+                    );
+                  },
+                );
+                setState(() {
+                  _isLoading = true; // Mostrar indicador de carga
+                });
+
+                // Simular espera de 2 segundos
+                await Future.delayed(const Duration(seconds: 10));
+
+                // Llamar a los métodos de sincronización
+                await DatabaseProvider.sincronizarDatosCliente();
+                await DatabaseProvider.sincronizarDatosAnexo();
+
+                setState(() {
+                  _isLoading = false; // Ocultar indicador de carga
+                });
+
+                // ignore: use_build_context_synchronously
+                Navigator.of(context).pop();
+                _showSnackBar();
+              }
             },
           ),
         ],

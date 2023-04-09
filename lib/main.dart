@@ -26,7 +26,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => FugaProvider()),
         ChangeNotifierProvider(create: (context) => ReparadoProvider()),
-        ChangeNotifierProvider(create: (context) => ClienteProvider())
+        ChangeNotifierProvider(create: (context) => ClienteProvider()),
+        ChangeNotifierProvider(create: (context) => BotonClienteProvider())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

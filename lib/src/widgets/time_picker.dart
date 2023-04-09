@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:install_inspect/src/theme/timepicker_theme.dart';
 
 class CampoHora extends StatefulWidget {
   final TextEditingController controlador;
@@ -55,15 +56,19 @@ class _CampoHoraState extends State<CampoHora> {
 
   selectTime(BuildContext context) {
     String hora;
-    return showTimePicker(context: context, initialTime: TimeOfDay.now())
-        .then((value) => setState(() {
-              //print('el valor es del time $value');
-              hora = value.toString();
-              if ((value == null)) {
-                widget.controlador.text = '';
-              } else {
-                widget.controlador.text = hora.substring(10, 15);
-              }
-            }));
+    return showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        builder: (context, child) {
+          return temaDatePicker(context, child);
+        }).then((value) => setState(() {
+          //print('el valor es del time $value');
+          hora = value.toString();
+          if ((value == null)) {
+            widget.controlador.text = '';
+          } else {
+            widget.controlador.text = hora.substring(10, 15);
+          }
+        }));
   }
 }

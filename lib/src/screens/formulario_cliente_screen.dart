@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:install_inspect/src/db/helper_db.dart';
 import 'package:install_inspect/src/db/insertar_cliente.dart';
+import 'package:install_inspect/src/db/obtener_datos.dart';
 import 'package:install_inspect/src/models/cliente_model.dart';
 import 'package:install_inspect/src/providers/providers.dart';
 import 'package:install_inspect/src/screens/screens.dart';
@@ -9,26 +9,19 @@ import 'package:provider/provider.dart';
 
 class ClienteScreen extends StatefulWidget {
   const ClienteScreen({super.key});
-
   @override
   State<ClienteScreen> createState() => _ClienteScreenState();
 }
 
 class _ClienteScreenState extends State<ClienteScreen> {
   final _formKey = GlobalKey<FormState>();
-
   final clienteID = TextEditingController();
-
   final cliente = TextEditingController();
-
   final ciudad = TextEditingController();
-
   final trimestre = TextEditingController();
-
   final idDespues = TextEditingController();
-
-  // ignore: prefer_typing_uninitialized_variables
-  //late final clienteID;
+  final FocusNode _dropdownFocusNode = FocusNode();
+  Cliente? _selectedCliente;
 
   final List<DropdownMenuItem<Cliente>> _clientDropdownItems = [
     const DropdownMenuItem<Cliente>(
@@ -36,8 +29,6 @@ class _ClienteScreenState extends State<ClienteScreen> {
       child: Text("Crear nuevo cliente"),
     ),
   ];
-  Cliente? _selectedCliente;
-  final FocusNode _dropdownFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -46,10 +37,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
   }
 
   void getClients() async {
-    final clientsData = await DatabaseProvider.getDataFromTable('cliente');
-
+    final clientsData = await getDataFromTable('cliente');
     if (clientsData.isEmpty) {
-      print('no tengo datos');
     } else {
       final List<Cliente> clients =
           clientsData.map((data) => Cliente.fromMap(data)).toList();
@@ -65,24 +54,12 @@ class _ClienteScreenState extends State<ClienteScreen> {
         });
       }
     }
-    final db = await DatabaseProvider.db.database;
-    final lastId = await db!.rawQuery('SELECT last_insert_rowid() as id');
-
-    if (lastId.isNotEmpty) {
-      final Object? clientId = lastId.first['id'];
-      print('Último ID insertado en la tabla de clientes: $clientId');
-    }
   }
-
-  // obtenerDatosAnexo() async {
-  //   final anexosData = await DatabaseProvider.getDataFromTable(
-  //       DatabaseProvider.anexoTABLENAME);
-  // }
 
   @override
   Widget build(BuildContext context) {
     final hayCliente = Provider.of<ClienteProvider>(context);
-
+    final btnN = Provider.of<BotonClienteProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Center(child: Text('Clientes')),
@@ -122,7 +99,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
                   items: _clientDropdownItems,
                   onChanged: (value) {
                     if (value == null) {
-                      hayCliente.setCliente = value.toString();
+                      btnN.setTextBoton = 'Si';
+                      hayCliente.setCliente = 'No';
                       idDespues.text =
                           (DateTime.now().millisecondsSinceEpoch ~/ 1000)
                               .toString();
@@ -131,6 +109,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
                       trimestre.text = '';
                     } else {
                       setState(() {
+                        btnN.setTextBoton = 'No';
+                        hayCliente.setCliente = 'Si';
                         _selectedCliente = value;
                         clienteID.text = value.clienteID.toString();
                         idDespues.text = '';
@@ -152,7 +132,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
                 ),
               ),
             ),
-            hayCliente.getCliente == 'null' && hayCliente.getCliente != ''
+            hayCliente.getCliente != 'null' && hayCliente.getCliente != ''
                 ? NuevoClienteForm(
                     clienteID: clienteID,
                     cliente: cliente,
@@ -161,14 +141,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
                     formKey: _formKey,
                     idDespues: idDespues,
                   )
-                : NuevoClienteForm(
-                    clienteID: clienteID,
-                    cliente: cliente,
-                    ciudad: ciudad,
-                    trimestre: trimestre,
-                    formKey: _formKey,
-                    idDespues: idDespues,
-                  ),
+                : Container()
           ],
         ),
       )),
@@ -187,19 +160,15 @@ class NuevoClienteForm extends StatelessWidget {
       required this.idDespues});
 
   final GlobalKey<FormState> formKey;
-
   final TextEditingController clienteID;
-
   final TextEditingController cliente;
-
   final TextEditingController ciudad;
-
   final TextEditingController trimestre;
-
   final TextEditingController idDespues;
 
   @override
   Widget build(BuildContext context) {
+    final btnN = Provider.of<BotonClienteProvider>(context);
     return Column(
       children: [
         const SizedBox(
@@ -245,8 +214,7 @@ class NuevoClienteForm extends StatelessWidget {
                   print('id del cliente que ya esta ${clienteID.text}');
                   print('id del cleinte nuevo es ${idDespues.text}');
                   print(
-                      'el trimestre cuando ya se tiene registro es ${trimestreN}');
-
+                      'el trimestre cuando ya se tiene registro es $trimestreN');
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -255,19 +223,6 @@ class NuevoClienteForm extends StatelessWidget {
                               trimestre: trimestreN,
                             )),
                   );
-
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => FormularioAnexoScreen(
-                  //       clienteID: int.parse(clienteID.text),
-                  //       trimestre: trimestreN,
-                  //     ),
-                  //   ),
-                  // );
-                  // cliente.text = '';
-                  // ciudad.text = '';
-                  // trimestre.text = '';
                 }
 
                 if (idDespues.text != '' &&
@@ -275,8 +230,7 @@ class NuevoClienteForm extends StatelessWidget {
                   final String trimestreN = trimestre.text;
                   print('id del cliente que ya esta ${clienteID.text}');
                   print('id del cleinte nuevo es ${idDespues.text}');
-                  print(
-                      'el trimestre cuando el registro es nuevo ${trimestreN}');
+                  print('el trimestre cuando el registro es nuevo $trimestreN');
                   print('registrar nuevo cliente');
                   InsertarCliente().agregarCliente(Cliente(
                     clienteID: (int.parse(idDespues.text)),
@@ -293,50 +247,15 @@ class NuevoClienteForm extends StatelessWidget {
                               trimestre: trimestreN,
                             )),
                   );
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => FormularioAnexoScreen(
-                  //       clienteID: int.parse(idDespues.text),
-                  //       trimestre: trimestreN,
-                  //     ),
-                  //   ),
-                  // );
-
-                  // cliente.text = '';
-                  // ciudad.text = '';
-                  // trimestre.text = '';
+                  cliente.text = '';
+                  ciudad.text = '';
+                  trimestre.text = '';
                 }
-
-                // print('id del cliente ${clienteID.text}');
-                // print('nombre cliente ${cliente.text}');
-                // print('ciudad del cliente ${ciudad.text}');
-                // print('trimestre del cliente ${trimestre.text}');
-
-                // if (clienteID.text != null && clienteID != '') {
-
-                // } else {
-                //   InsertarCliente().agregarCliente(Cliente(
-                //     clienteID: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-                //     cliente: cliente.text,
-                //     ciudad: ciudad.text,
-                //     trimestre: trimestre.text,
-                //   ));
-                // }
-
-                //clienteID.text = '';
-
-                // ignore: use_build_context_synchronously
-                // Navigator.pushReplacement(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => FormularioAnexoScreen(
-                //             clienteID: clienteID.value as int,
-                //           )),
-                // );
               }
             },
-            child: const Text('Guardar Cliente'),
+            child: btnN.getTextBoton == 'Si'
+                ? const Text('Guardar Nuevo Cliente')
+                : const Text('Ir a la inspección'),
           ),
         )
       ],
